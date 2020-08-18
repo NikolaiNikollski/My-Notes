@@ -10,6 +10,6 @@ namespace MyNotes.Data.Models
     public class Notepad
     {
         [JsonProperty("notes")]
-        public List<Note> NoteList;
+        public Note[] Notes;
     }
 }

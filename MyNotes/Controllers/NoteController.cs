@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using MyNotes.Data.Models;
 using Newtonsoft.Json;
 
@@ -13,65 +15,74 @@ namespace MyNotes.Data
 {
     public class NoteController : Controller
     {
-        public async void Add()
+        public IConfiguration AppConfiguration { get; set; }
+
+        public void Add()
         {
             Request.ContentType = "Application/x-www-Form-UrlEncoded";
-
             if (!Request.Form.ContainsKey("text"))
             {
                 Response.ContentType = "text/html; charset=utf-8";
                 Response.StatusCode = 400;
-                await Response.WriteAsync("the parameter 'text' is missing or is set incorrectly");
+                Response.WriteAsync("the parameter 'text' is missing or is set incorrectly");
             }
             else
             {
+                var builder = new ConfigurationBuilder().AddJsonFile("conf.json");
+                AppConfiguration = builder.Build();
                 string text = Request.Form["text"];
-                string path = @"Data/Notepad.txt";
+                string path = AppConfiguration["notepadPath"];
                 try
                 {
                     using (StreamWriter sw = new StreamWriter(path, true, System.Text.Encoding.Default))
                     {
                         Note note = new Note(text);
                         string noteJson = JsonConvert.SerializeObject(note);
-                        await sw.WriteLineAsync(noteJson);
+                        sw.WriteLine(noteJson);
                     }
                     Response.ContentType = "text/html; charset=utf-8";
-                    await Response.WriteAsync("Recording completed");
+                    Response.WriteAsync("Recording completed");
                 }
-                catch (Exception e)
+                catch
                 {
                     Response.ContentType = "text/html; charset=utf-8";
-                    Response.StatusCode = 404;
-                    await Response.WriteAsync(e.Message);
+                    Response.WriteAsync("Recording failed");
                 }
             }
         }
 
-        public async void List()
+        public void List()
         {
-            string path = @"Data/Notepad.txt";
+            SendNoteList(GetNoteList());
+        }
+
+        public List<Note> GetNoteList()
+        {
+            List<Note> noteList = new List<Note>();
+            var builder = new ConfigurationBuilder().AddJsonFile("conf.json");
+            AppConfiguration = builder.Build();
+            string path = AppConfiguration["notepadPath"];
             try
             {
                 using (StreamReader sr = new StreamReader(path))
                 {
-                    List<Note> noteList = new List<Note>();
                     while (sr.Peek() > -1)
                     {
-                        string noteJson = await sr.ReadLineAsync();
+                        string noteJson = sr.ReadLine();
                         Note note = JsonConvert.DeserializeObject<Note>(noteJson);
                         noteList.Add(note);
                     }
-                    string noteListJson = JsonConvert.SerializeObject(noteList);
-                    Response.ContentType = "application/json; charset=utf-8";
-                    await Response.WriteAsync(noteListJson);
                 }
             }
-            catch (Exception e)
-            {
-                Response.ContentType = "text/html; charset=utf-8";
-                Response.StatusCode = 404;
-                await Response.WriteAsync(e.Message);
-            }
+            catch { }
+            return noteList;
+        }
+
+        public void SendNoteList(List<Note> noteList)
+        {
+            string notepadJson = JsonConvert.SerializeObject(noteList.ToArray());
+            Response.ContentType = "application/json; charset=utf-8";
+            Response.WriteAsync(notepadJson);
         }
     }
 }

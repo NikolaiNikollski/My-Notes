@@ -1,0 +1,7 @@
+﻿@using (Html.BeginForm("Save", "Note", FormMethod.Post))
+{
+    <p>@Html.Label("Text", "Введите тест заметки")</p>
+    @Html.TextArea("Text", "", new { required = "required"}) <br/>
+
+    <input type="submit" value="Сохранить" />
+}

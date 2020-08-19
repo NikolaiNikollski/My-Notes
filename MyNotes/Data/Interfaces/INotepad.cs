@@ -6,7 +6,7 @@ using MyNotes.Data.Models;
 
 namespace MyNotes.Data.Interfaces
 {
-    interface INotepad
+    public interface INotepad
     {
         IEnumerable<Note> Notes { get; }
     }

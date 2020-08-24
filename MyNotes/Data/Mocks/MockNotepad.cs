@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,23 +14,28 @@ namespace MyNotes.Data.Mocks
     public class MockNotepad : INotepad
     {
         public IConfiguration AppConfiguration { get; set; }
+        IConfigurationBuilder Builder = new ConfigurationBuilder().AddJsonFile("conf.json");
 
         public IEnumerable<Note> Notes
         {
             get
             {
                 List<Note> noteList = new List<Note>();
-                var builder = new ConfigurationBuilder().AddJsonFile("conf.json");
-                AppConfiguration = builder.Build();
-                string path = AppConfiguration["notepadPath"];
+                string connectionString = Builder.Build()["connectionString"];
+                string sqlExpression = "SELECT * FROM Notepad";
                 try
                 {
-                    using (StreamReader sr = new StreamReader(path))
+                    using (SqlConnection connection = new SqlConnection(connectionString))
                     {
-                        while (sr.Peek() > -1)
+                        connection.Open();
+                        SqlCommand command = new SqlCommand(sqlExpression, connection);
+                        SqlDataReader reader = command.ExecuteReader();
+
+                        while (reader.Read())
                         {
-                            string noteJson = sr.ReadLine();
-                            Note note = JsonConvert.DeserializeObject<Note>(noteJson);
+                            string text = reader.GetString(1);
+                            DateTime date = reader.GetDateTime(2);
+                            Note note = new Note(text, date);
                             noteList.Add(note);
                         }
                     }

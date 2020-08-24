@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -16,8 +17,11 @@ namespace MyNotes.Data
 {
     public class NoteController : Controller
     {
-        private readonly INotepad _notepad;
 
+        private IConfigurationBuilder Builder = new ConfigurationBuilder().AddJsonFile("conf.json");
+        public IConfiguration AppConfiguration { get; set; }
+
+        private readonly INotepad _notepad;
         public NoteController(INotepad iNotepad)
         {
             _notepad = iNotepad;
@@ -34,25 +38,23 @@ namespace MyNotes.Data
             return View();
         }
 
-        public IConfiguration AppConfiguration { get; set; }
-
         public void Save()
         {
-            Request.ContentType = "Application/x-www-Form-UrlEncoded";
+            string connectionString = Builder.Build()["connectionString"];
+            string text = Request.Form["text"];
+
+            string sqlExpression = $"INSERT INTO Notepad (NoteText) VALUES (@NoteText)";
+
             try
             {
-                var builder = new ConfigurationBuilder().AddJsonFile("conf.json");
-                AppConfiguration = builder.Build();
-                string text = Request.Form["text"];
-                string path = AppConfiguration["notepadPath"];
-
-                using (StreamWriter sw = new StreamWriter(path, true, System.Text.Encoding.Default))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    Note note = new Note(text);
-                    string noteJson = JsonConvert.SerializeObject(note);
-                    sw.WriteLine(noteJson);
+                    connection.Open();
+                    SqlCommand command = new SqlCommand(sqlExpression, connection);
+                    SqlParameter noteTextParam = new SqlParameter("@noteText", text);
+                    command.Parameters.Add(noteTextParam);
+                    command.ExecuteNonQuery();
                 }
-
                 Response.ContentType = "text/html; charset=utf-8";
                 Response.WriteAsync("Recording completed");
             }
@@ -62,6 +64,5 @@ namespace MyNotes.Data
                 Response.WriteAsync("Recording failed");
             }
         }
-
     }
 }

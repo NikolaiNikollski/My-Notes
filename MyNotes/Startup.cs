@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyNotes.Data.Interfaces;
-using MyNotes.Data.Mocks;
+using MyNotes.Data.Models;
 
 namespace MyNotes
 {

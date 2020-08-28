@@ -38,31 +38,51 @@ namespace MyNotes.Data
             return View();
         }
 
+        /* public void Save()
+          {
+              string connectionString = Builder.Build()["connectionString"];
+              string text = Request.Form["text"];
+
+              string sqlExpression = $"INSERT INTO Notepad (NoteText) VALUES (@NoteText)";
+
+              try
+              {
+                  using (SqlConnection connection = new SqlConnection(connectionString))
+                  {
+                      connection.Open();
+                      SqlCommand command = new SqlCommand(sqlExpression, connection);
+                      SqlParameter noteTextParam = new SqlParameter("@noteText", text);
+                      command.Parameters.Add(noteTextParam);
+                      command.ExecuteNonQuery();
+                  }
+                  Response.ContentType = "text/html; charset=utf-8";
+                  Response.WriteAsync("Recording completed");
+              }
+              catch
+              {
+                  Response.ContentType = "text/html; charset=utf-8";
+                  Response.WriteAsync("Recording failed");
+              }
+          } */
+        Database database = new Database();
         public void Save()
         {
-            string connectionString = Builder.Build()["connectionString"];
             string text = Request.Form["text"];
-
-            string sqlExpression = $"INSERT INTO Notepad (NoteText) VALUES (@NoteText)";
-
+            string sqlExpression = $"INSERT INTO Notepad (NoteText) VALUES ('{text}')";
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-                    SqlCommand command = new SqlCommand(sqlExpression, connection);
-                    SqlParameter noteTextParam = new SqlParameter("@noteText", text);
-                    command.Parameters.Add(noteTextParam);
-                    command.ExecuteNonQuery();
-                }
+                database.InitialConnect();
+                database.Query(sqlExpression);
+                database.DisConnect();
                 Response.ContentType = "text/html; charset=utf-8";
                 Response.WriteAsync("Recording completed");
             }
-            catch
+            catch(Exception e)
             {
                 Response.ContentType = "text/html; charset=utf-8";
-                Response.WriteAsync("Recording failed");
+                Response.WriteAsync(e.Message);
             }
         }
+
     }
 }

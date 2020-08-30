@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using MyNotes.Data.Interfaces;
 using MyNotes.Data.Models;
+using MyNotes.Data.Repository;
 using Newtonsoft.Json;
 
 namespace MyNotes.Data
@@ -64,25 +65,32 @@ namespace MyNotes.Data
                   Response.WriteAsync("Recording failed");
               }
           } */
-        Database database = new Database();
+
         public void Save()
         {
-            string text = Request.Form["text"];
-            string sqlExpression = $"INSERT INTO Notepad (NoteText) VALUES ('{text}')";
             try
             {
-                database.InitialConnect();
-                database.Query(sqlExpression);
-                database.DisConnect();
-                Response.ContentType = "text/html; charset=utf-8";
-                Response.WriteAsync("Recording completed");
+                Database database = new Database();
+                string text = Request.Form["text"];
+                database.InsertNote(text);
+                SaveResponsePos();
             }
-            catch(Exception e)
+            catch
             {
-                Response.ContentType = "text/html; charset=utf-8";
-                Response.WriteAsync(e.Message);
+                SaveResponseNeg();
             }
         }
 
+        private void SaveResponsePos()
+        {
+            Response.ContentType = "text/html; charset=utf-8";
+            Response.WriteAsync("Recording completed");
+        }
+
+        private void SaveResponseNeg()
+        {
+            Response.ContentType = "text/html; charset=utf-8";
+            Response.WriteAsync("Recording failed");
+        }
     }
 }

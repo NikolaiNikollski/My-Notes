@@ -5,19 +5,16 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+using MyNotes.Controllers;
 using MyNotes.Data.Interfaces;
-using MyNotes.Data.Models;
 using MyNotes.Data.Repository;
-using Newtonsoft.Json;
 
 namespace MyNotes.Data
 {
-    public class NoteController : Controller
-    {
+    public class NoteController : BaseController
+    { 
 
         private readonly INotepad _notepad;
         public NoteController(INotepad iNotepad)
@@ -36,60 +33,21 @@ namespace MyNotes.Data
             return View();
         }
 
-        /* public void Save()
-          {
-                private IConfigurationBuilder Builder = new ConfigurationBuilder().AddJsonFile("conf.json");
-                public IConfiguration AppConfiguration { get; set; }
-              string connectionString = Builder.Build()["connectionString"];
-              string text = Request.Form["text"];
-
-              string sqlExpression = $"INSERT INTO Notepad (NoteText) VALUES (@NoteText)";
-
-              try
-              {
-                  using (SqlConnection connection = new SqlConnection(connectionString))
-                  {
-                      connection.Open();
-                      SqlCommand command = new SqlCommand(sqlExpression, connection);
-                      SqlParameter noteTextParam = new SqlParameter("@noteText", text);
-                      command.Parameters.Add(noteTextParam);
-                      command.ExecuteNonQuery();
-                  }
-                  Response.ContentType = "text/html; charset=utf-8";
-                  Response.WriteAsync("Recording completed");
-              }
-              catch
-              {
-                  Response.ContentType = "text/html; charset=utf-8";
-                  Response.WriteAsync("Recording failed");
-              }
-          } */
 
         public void Save()
         {
+            GenerateLayout();
             try
             {
-                Database database = new Database();
+                NoteRepository database = new NoteRepository();
                 string text = Request.Form["text"];
                 database.InsertNote(text);
-                SaveResponsePos();
+                Response.WriteAsync("Recording completed");
             }
             catch
             {
-                SaveResponseNeg();
+                Response.WriteAsync("Recording failed");
             }
-        }
-
-        private void SaveResponsePos()
-        {
-            Response.ContentType = "text/html; charset=utf-8";
-            Response.WriteAsync("Recording completed");
-        }
-
-        private void SaveResponseNeg()
-        {
-            Response.ContentType = "text/html; charset=utf-8";
-            Response.WriteAsync("Recording failed");
         }
     }
 }

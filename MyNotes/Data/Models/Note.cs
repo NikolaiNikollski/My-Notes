@@ -31,7 +31,7 @@ namespace MyNotes.Data.Models
             get
             {
                 List<Note> notepad = new List<Note>();
-                Database database = new Database();
+                NoteRepository database = new NoteRepository();
                 try
                 {
                     notepad = database.GetNotes();

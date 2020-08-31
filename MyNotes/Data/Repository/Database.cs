@@ -13,12 +13,15 @@ namespace MyNotes.Data.Repository
         {
             if (text.Length == 0)
                 throw new Exception();
-            string sqlExpression = $"INSERT INTO Notepad (NoteText) VALUES ('{text}')";
-            DatabaseAlfa database = new DatabaseAlfa();
+            try
+            {
+                string sqlExpression = $"INSERT INTO Notepad (NoteText) VALUES ('{text}')";
+                DatabaseAlfa database = new DatabaseAlfa();
 
-            database.InitialConnect();
-            database.Query(sqlExpression);
-            database.DisConnect();
+                database.InitialConnect();
+                database.Query(sqlExpression);
+                database.DisConnect();
+            }
         }
 
         public List<Note> GetNotes()

@@ -19,9 +19,6 @@ namespace MyNotes.Data
     public class NoteController : Controller
     {
 
-        private IConfigurationBuilder Builder = new ConfigurationBuilder().AddJsonFile("conf.json");
-        public IConfiguration AppConfiguration { get; set; }
-
         private readonly INotepad _notepad;
         public NoteController(INotepad iNotepad)
         {
@@ -41,6 +38,8 @@ namespace MyNotes.Data
 
         /* public void Save()
           {
+                private IConfigurationBuilder Builder = new ConfigurationBuilder().AddJsonFile("conf.json");
+                public IConfiguration AppConfiguration { get; set; }
               string connectionString = Builder.Build()["connectionString"];
               string text = Request.Form["text"];
 

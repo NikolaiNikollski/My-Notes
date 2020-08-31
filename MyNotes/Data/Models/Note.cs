@@ -30,8 +30,14 @@ namespace MyNotes.Data.Models
         {
             get
             {
-                Database dataabse = new Database();
-                return dataabse.GetNotes();
+                List<Note> notepad = new List<Note>();
+                Database database = new Database();
+                try
+                {
+                    notepad = database.GetNotes();
+                }
+                catch { }
+                return notepad;
             }
         }
 

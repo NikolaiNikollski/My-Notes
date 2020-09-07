@@ -2,52 +2,63 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data.SqlClient;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MyNotes.Controllers;
 using MyNotes.Data.Interfaces;
-using MyNotes.Data.Repository;
+using MyNotes.Data.Models;
+using MyNotes.Data.NoteModel;
 
 namespace MyNotes.Data
 {
-    public class NoteController : BaseController
-    { 
-
+    [Route("api/[controller]")]
+    [ApiController]
+    public class NoteController : ControllerBase
+    {
         private readonly INotepad _notepad;
-        public NoteController(INotepad iNotepad)
+
+        public NoteController(INotepad notepad)
         {
-            _notepad = iNotepad;
+            _notepad = notepad;
         }
 
-        public ViewResult List()
+        [HttpPost]
+        public IActionResult CreateNote([FromForm] NoteDto note)
         {
-            var Notepad = _notepad.Notes;
-            return View(Notepad);
+            _notepad.Create(new Note(note.Text));
+            return Ok();
+
         }
 
-        public ViewResult Add()
+        [HttpPut("{id}")]
+        public IActionResult UppdateNote(int Id, [FromForm] NoteDto note)
         {
-            return View();
+            _notepad.Update(Id, note.Text);
+            return Ok();
         }
 
-
-        public void Save()
+        [HttpGet]
+        public IActionResult GetAllNotes()
         {
-            GenerateLayout();
-            try
-            {
-                NoteRepository database = new NoteRepository();
-                string text = Request.Form["text"];
-                database.InsertNote(text);
-                Response.WriteAsync("Recording completed");
-            }
-            catch
-            {
-                Response.WriteAsync("Recording failed");
-            }
+            List<Note> notes =_notepad.GetAll();
+            return Ok(notes);
+        }
+
+        [HttpGet("{id}")] //Если Id не существует, выбрасывает исключение
+        public IActionResult GetNoteById(int Id)
+        {
+            Note note = _notepad.GetById(Id);
+            return Ok(note);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteNote(int Id)
+        {
+            _notepad.Delete(Id);
+            return Ok();
         }
     }
 }

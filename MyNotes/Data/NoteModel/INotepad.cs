@@ -8,6 +8,10 @@ namespace MyNotes.Data.Interfaces
 {
     public interface INotepad
     {
-        IEnumerable<Note> Notes { get; }
+        void Create(Note note);
+        void Update(int id, string text);
+        List<Note> GetAll();
+        Note GetById(int id);
+        void Delete(int Id);
     }
 }

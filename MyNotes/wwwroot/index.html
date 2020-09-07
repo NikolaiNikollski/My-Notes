@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Notepad</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="index.css">
+    <script src="index.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Привет, я твой блокнот</h1>
+        <div class="row justify-content-center" ;">
+            <div class="col-1">
+                <button onclick="create()" class="btn btn-success" id="createButton" style="background-color: green">Создать</button>
+                <button onclick="save()" class="btn btn-success" disabled id="saveButton" style="background-color: lawngreen">Сохранить</button>
+            </div>
+            <div class="col-4" ;>
+                <input type="text" id="noteDate" class="form-control" disabled>
+                <textarea id="noteText" disabled style="width: 350px; height: 300px"></textarea>
+                <input type="text" id="noteId" hidden disabled class="form-control">
+                <input type="text" id="feedbackArea" disabled class="form-control">
+            </div>
+            <div class="col-1">
+                <button onclick="edit()" class="btn btn-success" id="editButton" style="background-color: blue">Редактировать</button>
+                <button onclick="update()" class="btn btn-success" disabled id="updateButton" style="background-color: deepskyblue">Обновить</button>
+                <button onclick="cancel()" class="btn btn-success" disabled id="cancelButton" style="background-color: yellow; margin-top: 200px;">Отмена</button>
+                <button onclick="del()" class="btn btn-success" disabled id="deleteButton" style="background-color: tomato">Удалить</button>
+            </div>
+        </div>
+
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th></th>
+                    <th>Дата</th>
+                    <th>Текст</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

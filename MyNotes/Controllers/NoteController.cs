@@ -8,9 +8,9 @@ using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MyNotes.Data.Interfaces;
-using MyNotes.Data.Models;
 using MyNotes.Data.NoteModel;
+
+using Microsoft.Extensions.Configuration;
 
 namespace MyNotes.Data
 {
@@ -30,7 +30,13 @@ namespace MyNotes.Data
         {
             _notepad.Create(new Note(note.Text));
             return Ok();
+        }
 
+        [HttpGet]
+        public IActionResult GetAllNotes()
+        {
+            List <Note> notes = _notepad.GetAll();
+            return Ok(notes);
         }
 
         [HttpPut("{id}")]
@@ -40,14 +46,7 @@ namespace MyNotes.Data
             return Ok();
         }
 
-        [HttpGet]
-        public IActionResult GetAllNotes()
-        {
-            List<Note> notes =_notepad.GetAll();
-            return Ok(notes);
-        }
-
-        [HttpGet("{id}")] //Если Id не существует, выбрасывает исключение
+        [HttpGet("{id}")]
         public IActionResult GetNoteById(int Id)
         {
             Note note = _notepad.GetById(Id);

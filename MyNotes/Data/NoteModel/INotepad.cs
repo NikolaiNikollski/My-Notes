@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MyNotes.Data.Models;
 
-namespace MyNotes.Data.Interfaces
+namespace MyNotes.Data.NoteModel
 {
     public interface INotepad
     {

@@ -1,0 +1,78 @@
+.btn {
+    width: 100px;
+    float: left;
+}
+
+.saveButton {
+    background-color: lawngreen;
+    display: none;
+}
+
+    .saveButton.selected {
+        display: inline-block;
+    }
+
+.canselButton {
+    background-color: orange;
+    display: none;
+}
+
+    .canselButton.selected {
+        display: inline-block;
+    }
+
+.deleteButton {
+    background-color: red;
+}
+
+    .deleteButton.selected {
+        background-color: red;
+    }
+
+
+.container {
+    display: flex;
+    overflow: hidden;
+    border: 2px solid grey;
+    padding: 0px;
+}
+
+    .container.selected {
+        display: block;
+    }
+
+.body:hover:not(.selected) {
+    background-color: #808080;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.body {
+    display: flex;
+    position: relative;
+    width: 100%;
+}
+
+    .body.selected {
+        display: block;
+    }
+
+
+.noteText {
+    padding: 3px 0 0 10px;
+    width: 100%;
+    overflow: hidden;
+    resize: none;
+}
+
+    .noteText.selected {
+        height: 300px;
+        resize: vertical;
+    }
+
+
+.noteDate {
+    width: 180px;
+    padding-top: 12px;
+    float: right;
+}

@@ -8,8 +8,7 @@ using System.Drawing;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MyNotes.Data.Interfaces;
-using MyNotes.Data.Models;
+using MyNotes.Data.NoteModel;
 
 
 public class Database

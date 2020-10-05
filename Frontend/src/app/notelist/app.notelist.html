@@ -1,0 +1,12 @@
+<button class="btn btn-success" (click)="createNote()">New Note</button>
+<div *ngFor="let note of notelist; index as index;">
+    <div class="container" [class.selected]="note.Selected">
+        <div class="body" [class.selected]="note.Selected" (click)="selectNote(note)">
+            <textarea class="noteText" [class.selected]="note.Selected" [(ngModel)]="note.Text" [disabled]="!note.Selected"></textarea>
+            <input class="noteDate" type="text" [(ngModel)]="note.Date" disabled>
+        </div>
+        <button [class.selected]="note.Selected" class="btn btn-success saveButton" (click)="process(note, index)">Save</button>
+        <button [class.selected]="note.Selected" class="btn btn-success canselButton" (click)="unselectNote(note, index)">Cansel</button>
+        <button [class.selected]="note.Selected" class="btn btn-success deleteButton" (click)="del(note)">Delete</button>
+    </div>
+</div>

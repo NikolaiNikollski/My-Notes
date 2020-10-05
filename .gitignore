@@ -1,7 +1,15 @@
-TestResult/
+﻿TestResult/
 
 .vs/
 
 bin/
 
 obj/
+
+Frontend/**/*.js
+
+Frontend/**/*.map
+
+Frontend/node_modules/*
+
+package-lock.json

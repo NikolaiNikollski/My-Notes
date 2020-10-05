@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MyNotes.Data.Interfaces;
-using MyNotes.Data.Models;
+using MyNotes.Data.NoteModel;
 
 namespace MyNotes.Data.Domain
 {
@@ -16,7 +15,9 @@ namespace MyNotes.Data.Domain
         public void Create(Note note) 
         {
             database.InitialConnect();
-            database.ProtectedQuery("Insert", "Notepad", new string[] { "NoteText" }, new string[] { note.Text });
+            database.ProtectedQuery("Insert", "Notepad", 
+                                    new string[] { "NoteText" }, 
+                                    new string[] { note.Text });
             database.DisConnect();
         }
 

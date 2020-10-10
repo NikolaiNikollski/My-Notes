@@ -7,9 +7,10 @@ bin/
 obj/
 
 Frontend/**/*.js
-
 Frontend/**/*.map
-
 Frontend/node_modules/*
+Frontemd/**/package-lock.json
 
-package-lock.json
+Nginx/**/*Cache
+Nginx/**/*.log
+Nginx/**/*.pid

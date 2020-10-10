@@ -1,6 +1,26 @@
 .btn {
+    height: 100%;
     width: 100px;
     float: left;
+    border: 0;
+    border-radius: 0px;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    font-family: Roboto; 
+    font-size: 20px;
+}
+
+    .btn.selected {
+        margin: 5px;
+        border: 3px solid darkslategrey;
+    }
+
+    .btn:hover {
+        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.8);
+        transition: 0.3s;
+    }
+
+.createButton {
+    font-size: 17px;
 }
 
 .saveButton {
@@ -29,20 +49,33 @@
         background-color: red;
     }
 
-
-.container {
+.noteContainer {
     display: flex;
     overflow: hidden;
     border: 2px solid grey;
     padding: 0px;
-}
+    border: 0 solid #B9B9B9;
+    border-width: 0 4px 4px 4px;
 
-    .container.selected {
+    max-height: 56px;
+    transition: max-height 0.5s;
+}
+    .noteContainer:first-child {
+        border-top: 4px solid #B9B9B9;
+    }
+
+    .noteContainer.selected {
         display: block;
+        border: 0 solid darkslategrey;
+        border-width: 6px 104px 6px 6px;
+        background-color: #F4F7F9;
+
+        max-height: 400px;
+        transition: max-height 0.5s;
     }
 
 .body:hover:not(.selected) {
-    background-color: #808080;
+    background-color: #F4F7F9;
     transition: 0.3s;
     cursor: pointer;
 }
@@ -59,20 +92,36 @@
 
 
 .noteText {
-    padding: 3px 0 0 10px;
+    padding: 1px 0 0 10px;
     width: 100%;
     overflow: hidden;
     resize: none;
+    border: 0;
+    height: 250px;
 }
 
     .noteText.selected {
-        height: 300px;
-        resize: vertical;
+        background-color: #F4F7F9;
+        padding: 10px;
+        border-bottom: 6px solid darkslategrey;
     }
 
 
 .noteDate {
-    width: 180px;
-    padding-top: 12px;
+    width: 140px;
+    padding-top: 6px;
     float: right;
+    border-width: 0;
+    cursor: default;
+}
+
+    .noteDate.selected {
+        margin-top: 10px;
+        background-color: #F4F7F9;
+        transition: 0.3s;
+        cursor: pointer;
+    }
+
+.buttonBlock {
+    display: inline-block;
 }

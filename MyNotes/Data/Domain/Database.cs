@@ -47,7 +47,10 @@ public class Database
         SqlCommand command = new SqlCommand(sqlExpression, connection);
 
         for (int i = 0; i < values.Length; i++)
+        {
+            if (values[i] == null) values[i] = "";
             command.Parameters.Add(new SqlParameter(tempValues[i], values[i]));
+        }
 
         return command.ExecuteNonQuery() > 0;
     }

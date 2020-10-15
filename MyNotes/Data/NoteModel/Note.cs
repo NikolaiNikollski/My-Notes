@@ -10,16 +10,17 @@ namespace MyNotes.Data.NoteModel
 {
     public class Note
     {
-        public int NoteId { get; private set; }
-        public DateTime Date { get; private set; }
-        public String Text { get; private set; }
+        public int NoteId { get; set; }
+        public string Text { get; set; }
+        public string Date { get; set; }
 
-        public Note(string text)
+        public Note(string text, string date)  //Input Model
         {
             Text = text;
+            Date = date;
         }
 
-        public Note(int id, string text, DateTime date)
+        public Note(int id, string text, string date)  //Output Model
         {
             NoteId = id;
             Text = text;

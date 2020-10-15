@@ -14,6 +14,16 @@ export class AppNotelist {
 
     httpRequest: HttpRequest = new HttpRequest();
 
+    async createNote() {
+        let note: Note = new Note("", this.formateDate(new Date), null)
+        await this.httpRequest.save(note)
+        await this.getNewNote().then(result => note = result)
+        this.notelist.unshift(note)
+        setTimeout(() => {
+            note.Selected = true
+        }, 100);
+    }
+
     update(note: Note): void {
         this.httpRequest.update(note);
         note.Selected = false;
@@ -30,20 +40,9 @@ export class AppNotelist {
         await this.httpRequest.loadNotes(notelist);
     }
 
-    async createNote() {
-        let note: Note = new Note("", null, null)
-        this.httpRequest.save(note)
-        await this.getNewNote().then(result => note = result)
-        await this.notelist.unshift(note)
-        setTimeout(() => {
-            note.Selected = true
-        }, 100);
-    }
-
     async getNewNote() {
         let newNotelist: Array<Note> = []
         await this.loadNotes(newNotelist)
-        console.log(newNotelist)
         return newNotelist[0]
     }
 
@@ -60,6 +59,16 @@ export class AppNotelist {
 
     ngOnInit() {
         this.loadNotes(this.notelist);
+    }
+
+    formateDate(inDate: Date): string {
+        const options = {
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+        };
+        return inDate.toLocaleString('ru', options);
     }
 }
 

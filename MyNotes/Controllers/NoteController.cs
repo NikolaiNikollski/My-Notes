@@ -11,52 +11,55 @@ using Microsoft.AspNetCore.Mvc;
 using MyNotes.Data.NoteModel;
 
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace MyNotes.Data
 {
     [Route("api/[controller]")]
     [ApiController]
     public class NoteController : ControllerBase
-    {
-        private readonly INotepad _notepad;
+    { 
 
-        public NoteController(INotepad notepad)
-        {
-            _notepad = notepad;
-        }
+        NoteContext db = new NoteContext();
 
         [HttpPost]
         public IActionResult CreateNote([FromForm] NoteDto note)
         {
-            _notepad.Create(new Note(note.Text));
+            db.Add(new Note(note.Text, note.Date));
+            db.SaveChanges();
             return Ok();
         }
 
         [HttpGet]
         public IActionResult GetAllNotes()
         {
-            List <Note> notes = _notepad.GetAll();
+            var notes = db.Notes
+                   .OrderBy(b => b.NoteId);
             return Ok(notes);
         }
 
         [HttpPut("{id}")]
-        public IActionResult UppdateNote(int Id, [FromForm] NoteDto note)
+        public IActionResult UppdateNote(int Id, [FromForm] NoteDto noteDto)
         {
-            _notepad.Update(Id, note.Text);
-            return Ok();
+            Note note = db.Notes.Find(Id);
+            note.Text = noteDto.Text;
+            db.SaveChanges();
+            return Ok(note.Text);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetNoteById(int Id)
         {
-            Note note = _notepad.GetById(Id);
+            Note note = db.Notes.Find(Id);
             return Ok(note);
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteNote(int Id)
         {
-            _notepad.Delete(Id);
+            Note note = db.Notes.Find(Id);
+            db.Remove(note);
+            db.SaveChanges();
             return Ok();
         }
     }

@@ -8,7 +8,7 @@ namespace MyNotes.Data.NoteModel
     public class NoteDto
     {
         public int NoteId { get; set; }
-        public DateTime Date { get;  set; }
-        public String Text { get;  set; }
+        public string Date { get;  set; }
+        public string Text { get;  set; }
     }
 }

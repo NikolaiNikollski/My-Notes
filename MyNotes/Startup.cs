@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MyNotes.Data.Domain;
 using MyNotes.Data.NoteModel;
 
 namespace MyNotes
@@ -27,7 +26,6 @@ namespace MyNotes
         public void ConfigureServices(IServiceCollection services)
         { 
             services.AddControllers();
-            services.AddScoped<INotepad, Notepad>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

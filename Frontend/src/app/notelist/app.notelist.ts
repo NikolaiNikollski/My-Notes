@@ -1,23 +1,27 @@
 import { Component } from '@angular/core';
-import { Note } from '../Data/Note'
-import { HttpRequest } from '../Data/HttpRequest'
+import { HttpService } from '../Data/http.service'
+import { Note } from '../Data/Note';
 
 @Component({
     selector: 'notelist',
     templateUrl: 'app.notelist.html',
-    styleUrls: ['app.notelist.css']
+    styleUrls: ['app.notelist.css'],
+    providers: [HttpService],
 })
 
 export class AppNotelist {
 
     notelist: Array<Note> = [];
 
-    httpRequest: HttpRequest = new HttpRequest();
+    constructor(private httpService: HttpService) { }
 
-    async createNote() {
+    createNote(): void {
         let note: Note = new Note("", this.formateDate(new Date), null)
-        await this.httpRequest.save(note)
-        await this.getNewNote().then(result => note = result)
+
+        this.httpService.save(note).subscribe((id: any) => {
+            note.Id = id
+        })
+
         this.notelist.unshift(note)
         setTimeout(() => {
             note.Selected = true
@@ -25,40 +29,37 @@ export class AppNotelist {
     }
 
     update(note: Note): void {
-        this.httpRequest.update(note);
+        this.httpService.update(note).subscribe()
         note.Selected = false;
         note.TempText = null;
     }
 
     del(note: Note, index: number): void {
-        this.httpRequest.del(note)
+        this.httpService.delete(note).subscribe()
         note.Selected = false;
         this.notelist.splice(index, 1)
     }
 
-    async loadNotes(notelist): Promise<void> {
-        await this.httpRequest.loadNotes(notelist);
-    }
 
-    async getNewNote() {
-        let newNotelist: Array<Note> = []
-        await this.loadNotes(newNotelist)
-        return newNotelist[0]
-    }
-
-    selectNote(note: Note) {
+    selectNote(note: Note): void {
         note.Selected = true;
         note.TempText = note.Text
     }
 
-    unselectNote(note: Note, index: number) {
+    unselectNote(note: Note, index: number): void {
         note.Selected = false;
         note.Text = note.TempText
         note.TempText = null;
     }
 
-    ngOnInit() {
-        this.loadNotes(this.notelist);
+    loadNotes(): void {
+        this.httpService.loadNotes().subscribe((data: Array<Note>) => {
+            this.notelist = data
+        })
+    }
+
+    ngOnInit(): void {
+        this.loadNotes()
     }
 
     formateDate(inDate: Date): string {

@@ -12,30 +12,23 @@ using MyNotes.Data.NoteModel;
 
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace MyNotes.Data
 {
     [Route("api/[controller]")]
     [ApiController]
     public class NoteController : ControllerBase
-    { 
+    {
 
         NoteContext db = new NoteContext();
 
         [HttpPost]
         public IActionResult CreateNote([FromForm] NoteDto note)
         {
-            db.Add(new Note(note.Text, note.Date));
+            EntityEntry<Note> result = db.Add(new Note(note.Text, note.Date));
             db.SaveChanges();
-            return Ok();
-        }
-
-        [HttpGet]
-        public IActionResult GetAllNotes()
-        {
-            var notes = db.Notes
-                   .OrderBy(b => b.NoteId);
-            return Ok(notes);
+            return Ok(result.Entity.NoteId);
         }
 
         [HttpPut("{id}")]
@@ -47,6 +40,13 @@ namespace MyNotes.Data
             return Ok(note.Text);
         }
 
+        [HttpGet]
+        public IActionResult GetAllNotes()
+        {
+            var notes = db.Notes.OrderByDescending(n => n.NoteId);
+            return Ok(notes);
+        }
+
         [HttpGet("{id}")]
         public IActionResult GetNoteById(int Id)
         {
@@ -54,10 +54,19 @@ namespace MyNotes.Data
             return Ok(note);
         }
 
+        [HttpGet("Last")]
+        public IActionResult GetLastNote()
+        {
+            var note = db.Notes
+                   .OrderBy(n => n.NoteId).Last();
+            return Ok(note);
+        }
+
         [HttpDelete("{id}")]
         public IActionResult DeleteNote(int Id)
         {
             Note note = db.Notes.Find(Id);
+
             db.Remove(note);
             db.SaveChanges();
             return Ok();

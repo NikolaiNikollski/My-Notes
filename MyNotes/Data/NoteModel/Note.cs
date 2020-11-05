@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using MyNotes.Data.NoteModel;
+using MyNotes.Models;
 
 namespace MyNotes.Data.NoteModel
 {
@@ -13,18 +14,8 @@ namespace MyNotes.Data.NoteModel
         public int NoteId { get; set; }
         public string Text { get; set; }
         public string Date { get; set; }
-
-        public Note(string text, string date)  //Input Model
-        {
-            Text = text;
-            Date = date;
-        }
-
-        public Note(int id, string text, string date)  //Output Model
-        {
-            NoteId = id;
-            Text = text;
-            Date = date;
-        }
+            
+        public int UserId { get; set; }
+        public User User { get; set; }
     }
 }

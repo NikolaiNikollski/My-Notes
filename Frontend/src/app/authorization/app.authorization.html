@@ -1,38 +1,39 @@
-<div class="wrapper">
-        <div class="form-top">
-            <div class="data2">
-                <div class="data2_1">
-                    <label for="name">Login</label>
-                    <input type="email" [(ngModel)]="login" required>
-                    <label class="required"></label>
-                </div>
-                <div class="data2_1">
-                    <label for="name">Email</label>
-                    <input type="email" [(ngModel)]="email" required>
-                    <label class="required"></label>
-                </div>
-                <div class="data2_2">
-                    <label for="name">Пароль</label>
-                    <input type="password" [(ngModel)]="password" required>
-                    <label class="required"></label>
-                </div>
-                <div class="data2_3">
-                    <label for="name">Повторите</label>
-                    <input type="password" [(ngModel)]="repeatedPassword" required>
-                    <label class="required"></label>
-                </div>
-            </div>
-            <div class="data3">
-                <label for="name">Введите число с картинки</label>
-                <div class="data3_2">
-                    <span>
-                        <img src="https://blog.malwarebytes.com/wp-content/uploads/2015/01/captcha2.png" alt="">
-                    </span>
-                    <input type="number" name="captcha" required>
-                    <span class="wrong-captcha">Неправильное число</span>
-                    <label class="required"></label>
-                </div>
-            </div>
+<header>
+    <div class="nav">
+        <div class="authPanel">
+            {{userLogin}}
+            <button *ngIf="!userAuthenticated" class="authPanelButton" (click)="getLoginForm()">Login</button>
+            <button *ngIf="!userAuthenticated" class="authPanelButton" (click)="getRegisterForm()">Register</button>
+            <button *ngIf="userAuthenticated" class="authPanelButton" (click)="logout()">logout</button>
         </div>
-        <button class="btn btn-success submitButton" (click)="submit()">Delete</button>
-</div>
+    </div>
+</header>
+
+<form *ngIf="loginForm"  #loginForm="ngForm" (ngSubmit)="login(loginForm)">
+    <div class="container-fluid formContainer">
+        <h2 class="form-signin-heading">Login</h2> <br />
+
+        <input type="email" name="username" ngModel class="form-control" placeholder="User Name" required autofocus>  <br />
+
+        <input type="password" name="password" ngModel class="form-control" placeholder="Password" required> <br />
+
+        <button class="btn btn-lg btn-primary formButton" type="submit">Sign in</button>
+        <div *ngIf="invalidFetch" class="alert alert-danger formButton">Invalid username or password.</div>
+    </div>
+</form>
+
+<form *ngIf="registerForm"  #registerForm="ngForm" (ngSubmit)="register(registerForm)">
+    <div class="container-fluid formContainer">
+        <h2 class="form-signin-heading">Register</h2> <br />
+        
+        <input type="email" name="username" ngModel class="form-control" placeholder="User Name" required autofocus> <br />
+        
+        <input type="password" name="password" ngModel class="form-control" placeholder="Password" required> <br />
+        
+        <input type="password" name="passwordRepeat" ngModel class="form-control" placeholder="Password Repeat" required> <br />
+        
+        <button class="btn btn-lg btn-primary formButton" type="submit">Register</button>
+        <div *ngIf="invalidFetch" class="alert alert-danger">Username is busy.</div>
+        <div *ngIf="repeatPasswordError" class="alert alert-danger">Passwords do not match.</div>
+    </div>
+</form>

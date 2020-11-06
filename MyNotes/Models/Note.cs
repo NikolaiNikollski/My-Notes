@@ -15,7 +15,7 @@ namespace MyNotes.Data.NoteModel
         public string Text { get; set; }
         public string Date { get; set; }
             
-        public int UserId { get; set; }
+        public ulong UserId { get; set; }
         public User User { get; set; }
     }
 }

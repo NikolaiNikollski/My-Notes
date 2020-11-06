@@ -13,7 +13,7 @@ namespace MyNotes.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long Id { get; set; }
+        public ulong Id { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
         public string RefreshToken { get; set; }

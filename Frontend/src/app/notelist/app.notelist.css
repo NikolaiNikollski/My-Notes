@@ -20,7 +20,9 @@
     }
 
 .createButton {
+    height: 60px;
     font-size: 17px;
+    background-color: deepskyblue;
 }
 
 .saveButton {
@@ -49,27 +51,28 @@
         background-color: red;
     }
 
+.notelistContainer {
+    margin-top: 50px;
+}
+
 .noteContainer {
     display: flex;
     overflow: hidden;
-    border: 2px solid grey;
     padding: 0px;
-    border: 0 solid #B9B9B9;
+    border: 0 solid #007BFF;
     border-width: 0 4px 4px 4px;
-
     max-height: 56px;
     transition: max-height 0.5s;
 }
     .noteContainer:first-child {
-        border-top: 4px solid #B9B9B9;
+        border-top: 4px solid #007BFF;
     }
 
     .noteContainer.selected {
         display: block;
-        border: 0 solid darkslategrey;
+        border: 0 solid darkblue;
         border-width: 6px 104px 6px 6px;
         background-color: #F4F7F9;
-
         max-height: 400px;
         transition: max-height 0.5s;
     }
@@ -103,7 +106,7 @@
     .noteText.selected {
         background-color: #F4F7F9;
         padding: 10px;
-        border-bottom: 6px solid darkslategrey;
+        border-bottom: 6px solid darkblue;
     }
 
 

@@ -2,7 +2,7 @@
 
 namespace MyNotes.Migrations
 {
-    public partial class InialCreate : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -10,7 +10,7 @@ namespace MyNotes.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    Id = table.Column<ulong>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     UserName = table.Column<string>(nullable: true),
                     Password = table.Column<string>(nullable: true),
@@ -30,24 +30,23 @@ namespace MyNotes.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Text = table.Column<string>(nullable: true),
                     Date = table.Column<string>(nullable: true),
-                    UserId = table.Column<int>(nullable: false),
-                    UserId1 = table.Column<long>(nullable: true)
+                    UserId = table.Column<ulong>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Notes", x => x.NoteId);
                     table.ForeignKey(
-                        name: "FK_Notes_Users_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_Notes_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notes_UserId1",
+                name: "IX_Notes_UserId",
                 table: "Notes",
-                column: "UserId1");
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

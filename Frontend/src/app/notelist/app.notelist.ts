@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { HttpService } from '../Data/http.service'
 import { Note } from '../Data/Note';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { HttpHeaders, HttpClient,  } from '@angular/common/http';
 
 @Component({
     selector: 'notelist',
@@ -11,11 +13,15 @@ import { Note } from '../Data/Note';
 
 export class AppNotelist {
 
+    @Output() onChangedUserName = new EventEmitter<string>();
     notelist: Array<Note> = [];
+    constructor(private httpService: HttpService, private jwtHelper: JwtHelperService, private http: HttpClient) { }
 
-    constructor(private httpService: HttpService) { }
 
-    createNote(): void {
+    async createNote(): Promise<void> {
+        let canActivatePromise = await this.canActivate()
+        if (!canActivatePromise) return
+
         let note: Note = new Note("", this.formateDate(new Date), null)
 
         this.httpService.save(note).subscribe((id: any) => {
@@ -28,37 +34,55 @@ export class AppNotelist {
         }, 100);
     }
 
-    update(note: Note): void {
+    async update(note: Note): Promise<void> {
+        let canActivatePromise = await this.canActivate()
+        if (!canActivatePromise) return
+
         this.httpService.update(note).subscribe()
         note.Selected = false;
         note.TempText = null;
     }
 
-    del(note: Note, index: number): void {
+    async del(note: Note, index: number): Promise<void> {
+        let canActivatePromise = await this.canActivate()
+        if (!canActivatePromise) return
+
+        if (!this.canActivate()) return 
         this.httpService.delete(note).subscribe()
         note.Selected = false;
         this.notelist.splice(index, 1)
     }
 
 
-    selectNote(note: Note): void {
+    async selectNote(note: Note): Promise<void> {
+        let canActivatePromise = await this.canActivate()
+        if (!canActivatePromise) return
+
         note.Selected = true;
         note.TempText = note.Text
     }
 
-    unselectNote(note: Note, index: number): void {
+    async unselectNote(note: Note, index: number): Promise<void> {
+        let canActivatePromise = await this.canActivate()
+        if (!canActivatePromise) return
+ 
         note.Selected = false;
         note.Text = note.TempText
         note.TempText = null;
     }
 
-    loadNotes(): void {
-        this.httpService.loadNotes().subscribe((data: Array<Note>) => {
-            this.notelist = data
+    async loadNotes(): Promise<void> {
+        let canActivatePromise = await this.canActivate()
+        if (!canActivatePromise) return
+
+        this.httpService.loadNotes().subscribe((data: any) => {
+            this.notelist = data.notes
+            this.onChangedUserName.emit(data.name)
         })
     }
 
     ngOnInit(): void {
+ 
         this.loadNotes()
     }
 
@@ -71,6 +95,40 @@ export class AppNotelist {
         };
         return inDate.toLocaleString('ru', options);
     }
+
+    async canActivate() {
+        const token = localStorage.getItem("jwt");
+
+        if (token && !this.jwtHelper.isTokenExpired(token))
+            return true;
+
+        let refreshSuccessPromise = await this.tryRefreshingTokens(token)
+        if (refreshSuccessPromise)
+            return true
+
+        this.onChangedUserName.emit("")
+        return false
+    }
+
+    private async tryRefreshingTokens(token: string): Promise<boolean> {
+        const refreshToken: string = localStorage.getItem("refreshToken");
+        const credentials = JSON.stringify({ accessToken: token, refreshToken: refreshToken });
+        let isRefreshSuccess: boolean;
+        try {
+            const response = await this.httpService.refresh(credentials)
+
+            const newToken = response.body.accessToken;
+            const newRefreshToken = response.body.refreshToken;
+            localStorage.setItem("jwt", newToken);
+            localStorage.setItem("refreshToken", newRefreshToken);
+            isRefreshSuccess = true;
+        }
+        catch (ex) {
+            isRefreshSuccess = false;
+        }
+        return isRefreshSuccess;
+    }
+
 }
 
 

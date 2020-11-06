@@ -14,13 +14,12 @@ export class AppAuthorization {
     constructor(private httpService: HttpService) { }
 
     @Input() userAuthenticated;
+    @Input() userName
     @Output() onChangedAuth = new EventEmitter<boolean>();
     loginForm: boolean = false;
     registerForm: boolean = false
     invalidFetch: boolean = false
     repeatPasswordError: boolean = false
-
-    userLogin: string = "";
 
     getLoginForm() {
         this.loginForm = true;
@@ -49,8 +48,7 @@ export class AppAuthorization {
             return
         }
         this.logout()
-        this.httpService.register(form).subscribe(response => { 
-            this.onCopmplete(response); this.userLogin = form.value.username }, err => this.onError())
+        this.httpService.register(form).subscribe(response => this.onCopmplete(response), err => this.onError())
 
 
     }
@@ -60,9 +58,7 @@ export class AppAuthorization {
         this.repeatPasswordError = false
 
         this.logout()
-        this.httpService.login(form).subscribe(response => {
-            this.onCopmplete(response); this.userLogin = form.value.username
-        }, err => this.onError())
+        this.httpService.login(form).subscribe(response => this.onCopmplete(response), err => this.onError())
     }
 
     onCopmplete(response) {
@@ -84,6 +80,6 @@ export class AppAuthorization {
         localStorage.removeItem("refreshToken");
         this.onChangedAuth.emit(false);
         this.loginForm = true;
-        this.userLogin = "";
+        this.userName = ''
     }
 }

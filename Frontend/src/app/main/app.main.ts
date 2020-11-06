@@ -13,9 +13,16 @@ export class AppMain {
     constructor(private jwtHelper: JwtHelperService,) { }
 
     userAuthenticated = this.isUserAuthenticated()
+    userName: string
 
-    onChangedAuth(increased: any) {
+    onChangedAuth(increased: boolean) {
         this.userAuthenticated = increased
+    }
+
+    onChangedUserName(newUserName: string) {
+        if (newUserName === '')
+            this.userAuthenticated = false
+        this.userName = newUserName
     }
 
     isUserAuthenticated() {

@@ -11,6 +11,7 @@ using System.Linq;
 using System;
 using AuthenticationJWT.TokenServiceData;
 using MyNotes.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AuthApp.Controllers
 {
@@ -19,7 +20,7 @@ namespace AuthApp.Controllers
     public class AuthController : ControllerBase
     {
         private UserContext db = new UserContext();
-        readonly ITokenService tokenService = new TokenService();
+        readonly TokenService tokenService = new TokenService();
 
         [HttpPost, Route("login")]
         public IActionResult Login([FromBody] User inputUser)
@@ -30,11 +31,11 @@ namespace AuthApp.Controllers
             }
 
             User user = db.Users
-                .Where(u => u.UserName == inputUser.UserName).
+                .Where(u => u.UserName == inputUser.UserName && u.Password == inputUser.Password).
                 FirstOrDefault();
             if (user != null)
             {
-                return Ok(Authenticate(user));
+                return Ok(GetToken(user));
             }
             else
                 return BadRequest("User not found"); 
@@ -58,20 +59,21 @@ namespace AuthApp.Controllers
 
                 user = new User();
                 user.UserName = inputUser.UserName;
-                user.Password = inputUser.UserName;
+                user.Password = inputUser.Password;
                 var dbUser = db.Users.Add(user);
                 db.SaveChangesAsync();
 
-                return Ok(Authenticate(dbUser.Entity));
+                return Ok(GetToken(dbUser.Entity));
             }
         }
 
-        public IActionResult Authenticate(User user)
+        public IActionResult GetToken(User user)
         {
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Id.ToString()),
-                new Claim(ClaimTypes.Role, "User")
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Role, "User"),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             };
 
             string newAccessToken = tokenService.GenerateAccessToken(claims);
@@ -87,5 +89,50 @@ namespace AuthApp.Controllers
                 refreshToken = newRefreshToken
             });
         }
+
+        [HttpPost, Authorize]
+        [Route("refresh")]
+        public IActionResult Refresh(TokenApiModel tokenApiModel)
+        {
+            if (tokenApiModel is null)
+            {
+                return BadRequest("Invalid client request");
+            }
+
+            string accessToken = tokenApiModel.AccessToken;
+            string refreshToken = tokenApiModel.RefreshToken;
+
+            var principal = tokenService.GetPrincipalFromToken(accessToken);
+            string userId = principal.Identities.ToList()[0].Claims.ToList()[2].Value;
+
+            User user = db.Users.SingleOrDefault(u => u.Id == Convert.ToUInt64(userId));
+            if (user == null || user.RefreshToken != refreshToken || new DateTime(Convert.ToInt64(user.RefreshTokenExpiryTime)) <= DateTime.Now) ///дата
+            {
+                return BadRequest("Token Error");
+            }
+
+            string newAccessToken = tokenService.GenerateAccessToken(principal.Claims);
+            string newRefreshToken = tokenService.GenerateRefreshToken();
+            user.RefreshToken = newRefreshToken;
+            db.SaveChanges();
+
+            return new ObjectResult(new
+            {
+                accessToken = newAccessToken,
+                refreshToken = newRefreshToken
+            });
+        }
+
+        [HttpPost, Authorize]
+        [Route("revoke")]
+        public IActionResult Revoke()
+        {
+            var username = User.Identity.Name;
+            var user = db.Users.SingleOrDefault(u => u.UserName == username);
+            if (user == null) return BadRequest();
+            user.RefreshToken = null;
+            db.SaveChanges();
+            return NoContent();
+        }
     }
-}
+}   

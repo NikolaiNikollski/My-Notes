@@ -1,7 +1,7 @@
 <header>
     <div class="nav">
         <div class="authPanel">
-            {{userLogin}}
+            {{userName}}
             <button *ngIf="!userAuthenticated" class="authPanelButton" (click)="getLoginForm()">Login</button>
             <button *ngIf="!userAuthenticated" class="authPanelButton" (click)="getRegisterForm()">Register</button>
             <button *ngIf="userAuthenticated" class="authPanelButton" (click)="logout()">logout</button>

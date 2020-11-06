@@ -1,5 +1,11 @@
 ﻿<div>
-    <authorization [userAuthenticated]="userAuthenticated" (onChangedAuth)="onChangedAuth($event)"></authorization>
-    <notelist *ngIf="userAuthenticated"></notelist>
+    <authorization [userAuthenticated]="userAuthenticated"
+                   (onChangedAuth)="onChangedAuth($event)"
+                   [userName] = "userName">
+    </authorization>
+    <notelist 
+              *ngIf="userAuthenticated"
+              (onChangedUserName)="onChangedUserName($event)">
+    </notelist>
 </div>  
 

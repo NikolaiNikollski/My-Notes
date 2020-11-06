@@ -15,6 +15,8 @@ using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MyNotes.Models;
 using AuthenticationJWT.TokenServiceData;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MyNotes.Data
 {
@@ -22,68 +24,54 @@ namespace MyNotes.Data
     [ApiController]
     public class NoteController : ControllerBase
     {
-        readonly ITokenService tokenService = new TokenService();
+        readonly TokenService tokenService = new TokenService();
         UserContext db = new UserContext();
 
-        [HttpPost]
+        [HttpPost, Authorize]
         public IActionResult CreateNote([FromForm] NoteDto inputNote)
         {
-            Note note = new Note { Text = inputNote.Text, Date = inputNote.Date, UserId = getUserId(Request) };
+            ulong userId = Convert.ToUInt64(tokenService.getValueFromRequestHeader(Request, "NameIdentifier"));
+            Note note = new Note { Text = inputNote.Text, Date = inputNote.Date, UserId = userId };
 
             EntityEntry<Note> result = db.Add(note);
             db.SaveChanges();
             return Ok(result.Entity.NoteId);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize]
         public IActionResult UppdateNote(int id, [FromForm] NoteDto noteDto)
         {
-            int userId = getUserId(Request);
+            ulong userId = Convert.ToUInt64(tokenService.getValueFromRequestHeader(Request, "NameIdentifier"));
             Note note = db.Notes.FirstOrDefault(n => n.NoteId == id & n.UserId == userId);
             note.Text = noteDto.Text;
             db.SaveChanges();
             return Ok();
         }
 
-        [HttpGet]
+        [HttpGet, Authorize]
         public IActionResult GetAllNotes()
         {
-            int userId = getUserId(Request);
+            ulong userId = Convert.ToUInt64(tokenService.getValueFromRequestHeader(Request, "NameIdentifier"));
             var notes = db.Notes.OrderByDescending(n => n.NoteId).Where(n => n.UserId == userId);
-            return Ok(notes);
+            return Ok( new ObjectResult( new { name = tokenService.getValueFromRequestHeader(Request, "Name"), notes = notes,}));
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize]
         public IActionResult GetNoteById(int id)
         {
-            int userId = getUserId(Request);
+            ulong userId = Convert.ToUInt64(tokenService.getValueFromRequestHeader(Request, "NameIdentifier"));
             Note note = db.Notes.FirstOrDefault(n => n.NoteId == id & n.UserId == userId);
             return Ok(note);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         public IActionResult DeleteNote(int id)
         {
-            int userId = getUserId(Request);
+            ulong userId = Convert.ToUInt64(tokenService.getValueFromRequestHeader(Request, "NameIdentifier"));
             Note note = db.Notes.FirstOrDefault(n => n.NoteId == id & n.UserId == userId); ;
             db.Remove(note);
             db.SaveChanges();
             return Ok();
-        }
-
-        private int getUserId(HttpRequest request)
-        {
-            Request.Headers.TryGetValue("Authorization", out var jwt);
-            try
-            {
-                jwt = jwt.ToString().Split(" ")[1];
-                var principal = tokenService.GetPrincipalFromToken(jwt);
-                return Convert.ToInt32(principal.Identity.Name); //Todo
-            }
-            catch (Exception e)
-            {
-                return 0;
-            }
         }
     }
 }

@@ -1,7 +1,7 @@
 import { Note } from './Note';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
@@ -26,9 +26,10 @@ export class HttpService {
         return this.http.put(this.urlNote + '/' + note.Id, formData)
     }
 
-    loadNotes(): Observable<Note[]> {
-       return this.http.get(this.urlNote).pipe(map(data => {
-            return data.map(note => new Note(note.text, note.date, note.noteId))              
+    loadNotes(): Observable<object[]> {
+      
+        return this.http.get(this.urlNote).pipe(map(data => {
+            return { ...data.value, notes: data.value.notes.map(note => new Note(note.text, note.date, note.noteId)) }              
         }));
     }
 
@@ -38,13 +39,13 @@ export class HttpService {
 
     login(form: NgForm): Observable<object> {
         const credentials = JSON.stringify(form.value);
-        console.log(credentials);
         return this.http.post(this.urlAccount + '/login', credentials, {
             headers: new HttpHeaders({
                 "Content-Type": "application/json"
             })
         })
     }
+
     register(form: NgForm): Observable<object>  {
         const credentials = JSON.stringify(form.value);
         return this.http.post(this.urlAccount + '/register', credentials, {
@@ -52,5 +53,15 @@ export class HttpService {
                 "Content-Type": "application/json"
             })
         })
+    }
+
+    async refresh(credentials): Promise<HttpResponse<Object>>{
+        const response = await this.http.post(this.urlAccount + '/refresh', credentials, {
+            headers: new HttpHeaders({
+                "Content-Type": "application/json"
+            }),
+            observe: 'response'
+        }).toPromise();
+        return response
     }
 }

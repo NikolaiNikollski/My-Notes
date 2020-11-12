@@ -60,17 +60,25 @@ namespace AuthenticationJWT.TokenServiceData
 
             var tokenHandler = new JwtSecurityTokenHandler();
             SecurityToken securityToken;
-            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
 
-            var jwtSecurityToken = securityToken as JwtSecurityToken;
-            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
-                throw new SecurityTokenException("Invalid token");
+            try
+            {
+                var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
 
-            return principal;
+                var jwtSecurityToken = securityToken as JwtSecurityToken;
+                if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                    throw new SecurityTokenException("Invalid token");
+
+                return principal;
+            }
+            catch
+            {
+                return null;
+            }
+            
         }
 
-
-        public string getValueFromRequestHeader(HttpRequest request, string claim)
+        public string GetValueFromRequestHeader(HttpRequest request, string claim)
         {
             int claimNumber = 0;
             switch (claim)
@@ -84,11 +92,14 @@ namespace AuthenticationJWT.TokenServiceData
                 case "NameIdentifier":
                     claimNumber = 2;
                     break;
+                default:
+                    return null;
             }
 
             request.Headers.TryGetValue("Authorization", out var jwt);
             jwt = jwt.ToString().Split(" ")[1];
             var principal = GetPrincipalFromToken(jwt);
+            if (principal == null) return null;
             return principal.Identities.ToList()[0].Claims.ToList()[claimNumber].Value;
         }
     }

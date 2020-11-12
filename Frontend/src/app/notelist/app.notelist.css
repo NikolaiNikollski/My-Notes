@@ -34,12 +34,12 @@
         display: inline-block;
     }
 
-.canselButton {
+.cancelButton {
     background-color: orange;
     display: none;
 }
 
-    .canselButton.selected {
+    .cancelButton.selected {
         display: inline-block;
     }
 

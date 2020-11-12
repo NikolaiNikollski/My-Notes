@@ -24,9 +24,9 @@ export class AppNotelist {
 
         let note: Note = new Note("", this.formateDate(new Date), null)
 
-        this.httpService.save(note).subscribe((id: any) => {
+        this.httpService.create(note).subscribe((id: any) => {
             note.Id = id
-        })
+        }, (err) => { this.onChangedUserName.emit(null) })
 
         this.notelist.unshift(note)
         setTimeout(() => {
@@ -38,17 +38,20 @@ export class AppNotelist {
         let canActivatePromise = await this.canActivate()
         if (!canActivatePromise) return
 
-        this.httpService.update(note).subscribe()
+        this.httpService.update(note).subscribe(() => { }, (err) => { this.onChangedUserName.emit(null) })
         note.Selected = false;
         note.TempText = null;
     }
 
     async del(note: Note, index: number): Promise<void> {
         let canActivatePromise = await this.canActivate()
-        if (!canActivatePromise) return
+        if (!canActivatePromise) {
+            this.onChangedUserName.emit(null)
+            return
+        }
 
         if (!this.canActivate()) return 
-        this.httpService.delete(note).subscribe()
+        this.httpService.delete(note).subscribe(() => { }, (err) => { this.onChangedUserName.emit(null) })
         note.Selected = false;
         this.notelist.splice(index, 1)
     }
@@ -78,7 +81,7 @@ export class AppNotelist {
         this.httpService.loadNotes().subscribe((data: any) => {
             this.notelist = data.notes
             this.onChangedUserName.emit(data.name)
-        })
+        }, (err) => { this.onChangedUserName.emit(null) })
     }
 
     ngOnInit(): void {
@@ -106,7 +109,7 @@ export class AppNotelist {
         if (refreshSuccessPromise)
             return true
 
-        this.onChangedUserName.emit("")
+        this.onChangedUserName.emit(null)
         return false
     }
 

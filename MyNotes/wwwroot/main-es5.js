@@ -113,6 +113,38 @@
       /*! @angular/core */
       "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
 
+      var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+        function adopt(value) {
+          return value instanceof P ? value : new P(function (resolve) {
+            resolve(value);
+          });
+        }
+
+        return new (P || (P = Promise))(function (resolve, reject) {
+          function fulfilled(value) {
+            try {
+              step(generator.next(value));
+            } catch (e) {
+              reject(e);
+            }
+          }
+
+          function rejected(value) {
+            try {
+              step(generator["throw"](value));
+            } catch (e) {
+              reject(e);
+            }
+          }
+
+          function step(result) {
+            result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+          }
+
+          step((generator = generator.apply(thisArg, _arguments || [])).next());
+        });
+      };
+
       var HttpService = /*#__PURE__*/function () {
         function HttpService(http) {
           _classCallCheck(this, HttpService);
@@ -173,6 +205,35 @@
                 "Content-Type": "application/json"
               })
             });
+          }
+        }, {
+          key: "refresh",
+          value: function refresh(credentials) {
+            return __awaiter(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+              var response;
+              return regeneratorRuntime.wrap(function _callee$(_context) {
+                while (1) {
+                  switch (_context.prev = _context.next) {
+                    case 0:
+                      _context.next = 2;
+                      return this.http.post(this.urlAccount + '/refresh', credentials, {
+                        headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({
+                          "Content-Type": "application/json"
+                        }),
+                        observe: 'response'
+                      }).toPromise();
+
+                    case 2:
+                      response = _context.sent;
+                      return _context.abrupt("return", response);
+
+                    case 4:
+                    case "end":
+                      return _context.stop();
+                  }
+                }
+              }, _callee, this);
+            }));
           }
         }]);
 
@@ -868,6 +929,7 @@
         }, {
           key: "onChangedUserName",
           value: function onChangedUserName(newUserName) {
+            if (newUserName === '') this.userAuthenticated = false;
             this.userName = newUserName;
           }
         }, {
@@ -981,15 +1043,15 @@
       /* harmony import */
 
 
-      var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
-      /*! @angular/common/http */
-      "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/http.js");
+      var _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+      /*! @auth0/angular-jwt */
+      "./node_modules/@auth0/angular-jwt/__ivy_ngcc__/fesm2015/auth0-angular-jwt.js");
       /* harmony import */
 
 
-      var _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
-      /*! @auth0/angular-jwt */
-      "./node_modules/@auth0/angular-jwt/__ivy_ngcc__/fesm2015/auth0-angular-jwt.js");
+      var _angular_common_http__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
+      /*! @angular/common/http */
+      "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/http.js");
       /* harmony import */
 
 
@@ -1109,7 +1171,7 @@
             return ctx_r8.unselectNote(note_r1, index_r2);
           });
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](8, "Cansel");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](8, "Cancel");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
@@ -1184,58 +1246,228 @@
         _createClass(AppNotelist, [{
           key: "createNote",
           value: function createNote() {
-            if (!this.canActivate()) return;
-            var note = new _Data_Note__WEBPACK_IMPORTED_MODULE_2__["Note"]("", this.formateDate(new Date()), null);
-            this.httpService.save(note).subscribe(function (id) {
-              note.Id = id;
-            });
-            this.notelist.unshift(note);
-            setTimeout(function () {
-              note.Selected = true;
-            }, 100);
+            return __awaiter(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+              var canActivatePromise, note;
+              return regeneratorRuntime.wrap(function _callee2$(_context2) {
+                while (1) {
+                  switch (_context2.prev = _context2.next) {
+                    case 0:
+                      _context2.next = 2;
+                      return this.canActivate();
+
+                    case 2:
+                      canActivatePromise = _context2.sent;
+
+                      if (canActivatePromise) {
+                        _context2.next = 5;
+                        break;
+                      }
+
+                      return _context2.abrupt("return");
+
+                    case 5:
+                      note = new _Data_Note__WEBPACK_IMPORTED_MODULE_2__["Note"]("", this.formateDate(new Date()), null);
+                      this.httpService.save(note).subscribe(function (id) {
+                        note.Id = id;
+                      });
+                      this.notelist.unshift(note);
+                      setTimeout(function () {
+                        note.Selected = true;
+                      }, 100);
+
+                    case 9:
+                    case "end":
+                      return _context2.stop();
+                  }
+                }
+              }, _callee2, this);
+            }));
           }
         }, {
           key: "update",
           value: function update(note) {
-            if (!this.canActivate()) return;
-            this.httpService.update(note).subscribe();
-            note.Selected = false;
-            note.TempText = null;
+            return __awaiter(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+              var canActivatePromise;
+              return regeneratorRuntime.wrap(function _callee3$(_context3) {
+                while (1) {
+                  switch (_context3.prev = _context3.next) {
+                    case 0:
+                      _context3.next = 2;
+                      return this.canActivate();
+
+                    case 2:
+                      canActivatePromise = _context3.sent;
+
+                      if (canActivatePromise) {
+                        _context3.next = 5;
+                        break;
+                      }
+
+                      return _context3.abrupt("return");
+
+                    case 5:
+                      this.httpService.update(note).subscribe();
+                      note.Selected = false;
+                      note.TempText = null;
+
+                    case 8:
+                    case "end":
+                      return _context3.stop();
+                  }
+                }
+              }, _callee3, this);
+            }));
           }
         }, {
           key: "del",
           value: function del(note, index) {
-            if (!this.canActivate()) return;
-            this.httpService["delete"](note).subscribe();
-            note.Selected = false;
-            this.notelist.splice(index, 1);
+            return __awaiter(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
+              var canActivatePromise;
+              return regeneratorRuntime.wrap(function _callee4$(_context4) {
+                while (1) {
+                  switch (_context4.prev = _context4.next) {
+                    case 0:
+                      _context4.next = 2;
+                      return this.canActivate();
+
+                    case 2:
+                      canActivatePromise = _context4.sent;
+
+                      if (canActivatePromise) {
+                        _context4.next = 5;
+                        break;
+                      }
+
+                      return _context4.abrupt("return");
+
+                    case 5:
+                      if (this.canActivate()) {
+                        _context4.next = 7;
+                        break;
+                      }
+
+                      return _context4.abrupt("return");
+
+                    case 7:
+                      this.httpService["delete"](note).subscribe();
+                      note.Selected = false;
+                      this.notelist.splice(index, 1);
+
+                    case 10:
+                    case "end":
+                      return _context4.stop();
+                  }
+                }
+              }, _callee4, this);
+            }));
           }
         }, {
           key: "selectNote",
           value: function selectNote(note) {
-            if (!this.canActivate()) return;
-            note.Selected = true;
-            note.TempText = note.Text;
+            return __awaiter(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
+              var canActivatePromise;
+              return regeneratorRuntime.wrap(function _callee5$(_context5) {
+                while (1) {
+                  switch (_context5.prev = _context5.next) {
+                    case 0:
+                      _context5.next = 2;
+                      return this.canActivate();
+
+                    case 2:
+                      canActivatePromise = _context5.sent;
+
+                      if (canActivatePromise) {
+                        _context5.next = 5;
+                        break;
+                      }
+
+                      return _context5.abrupt("return");
+
+                    case 5:
+                      note.Selected = true;
+                      note.TempText = note.Text;
+
+                    case 7:
+                    case "end":
+                      return _context5.stop();
+                  }
+                }
+              }, _callee5, this);
+            }));
           }
         }, {
           key: "unselectNote",
           value: function unselectNote(note, index) {
-            if (!this.canActivate()) return;
-            note.Selected = false;
-            note.Text = note.TempText;
-            note.TempText = null;
+            return __awaiter(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
+              var canActivatePromise;
+              return regeneratorRuntime.wrap(function _callee6$(_context6) {
+                while (1) {
+                  switch (_context6.prev = _context6.next) {
+                    case 0:
+                      _context6.next = 2;
+                      return this.canActivate();
+
+                    case 2:
+                      canActivatePromise = _context6.sent;
+
+                      if (canActivatePromise) {
+                        _context6.next = 5;
+                        break;
+                      }
+
+                      return _context6.abrupt("return");
+
+                    case 5:
+                      note.Selected = false;
+                      note.Text = note.TempText;
+                      note.TempText = null;
+
+                    case 8:
+                    case "end":
+                      return _context6.stop();
+                  }
+                }
+              }, _callee6, this);
+            }));
           }
         }, {
           key: "loadNotes",
           value: function loadNotes() {
-            var _this3 = this;
+            return __awaiter(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee7() {
+              var _this3 = this;
 
-            if (!this.canActivate()) return;
-            this.httpService.loadNotes().subscribe(function (data) {
-              _this3.notelist = data.notes;
+              var canActivatePromise;
+              return regeneratorRuntime.wrap(function _callee7$(_context7) {
+                while (1) {
+                  switch (_context7.prev = _context7.next) {
+                    case 0:
+                      _context7.next = 2;
+                      return this.canActivate();
 
-              _this3.onChangedUserName.emit(data.name);
-            });
+                    case 2:
+                      canActivatePromise = _context7.sent;
+
+                      if (canActivatePromise) {
+                        _context7.next = 5;
+                        break;
+                      }
+
+                      return _context7.abrupt("return");
+
+                    case 5:
+                      this.httpService.loadNotes().subscribe(function (data) {
+                        _this3.notelist = data.notes;
+
+                        _this3.onChangedUserName.emit(data.name);
+                      });
+
+                    case 6:
+                    case "end":
+                      return _context7.stop();
+                  }
+                }
+              }, _callee7, this);
+            }));
           }
         }, {
           key: "ngOnInit",
@@ -1256,89 +1488,89 @@
         }, {
           key: "canActivate",
           value: function canActivate() {
-            return __awaiter(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-              var token, isRefreshSuccess;
-              return regeneratorRuntime.wrap(function _callee$(_context) {
+            return __awaiter(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee8() {
+              var token, refreshSuccessPromise;
+              return regeneratorRuntime.wrap(function _callee8$(_context8) {
                 while (1) {
-                  switch (_context.prev = _context.next) {
+                  switch (_context8.prev = _context8.next) {
                     case 0:
                       token = localStorage.getItem("jwt");
 
                       if (!(token && !this.jwtHelper.isTokenExpired(token))) {
-                        _context.next = 3;
+                        _context8.next = 3;
                         break;
                       }
 
-                      return _context.abrupt("return", true);
+                      return _context8.abrupt("return", true);
 
                     case 3:
-                      _context.next = 5;
+                      _context8.next = 5;
                       return this.tryRefreshingTokens(token);
 
                     case 5:
-                      isRefreshSuccess = _context.sent;
+                      refreshSuccessPromise = _context8.sent;
 
-                      if (!isRefreshSuccess) {
-                        this.onChangedUserName.emit("");
+                      if (!refreshSuccessPromise) {
+                        _context8.next = 8;
+                        break;
                       }
 
-                    case 7:
+                      return _context8.abrupt("return", true);
+
+                    case 8:
+                      this.onChangedUserName.emit("");
+                      return _context8.abrupt("return", false);
+
+                    case 10:
                     case "end":
-                      return _context.stop();
+                      return _context8.stop();
                   }
                 }
-              }, _callee, this);
+              }, _callee8, this);
             }));
           }
         }, {
           key: "tryRefreshingTokens",
           value: function tryRefreshingTokens(token) {
-            return __awaiter(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+            return __awaiter(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee9() {
               var refreshToken, credentials, isRefreshSuccess, response, newToken, newRefreshToken;
-              return regeneratorRuntime.wrap(function _callee2$(_context2) {
+              return regeneratorRuntime.wrap(function _callee9$(_context9) {
                 while (1) {
-                  switch (_context2.prev = _context2.next) {
+                  switch (_context9.prev = _context9.next) {
                     case 0:
-                      // Try refreshing tokens using refresh token
                       refreshToken = localStorage.getItem("refreshToken");
                       credentials = JSON.stringify({
                         accessToken: token,
                         refreshToken: refreshToken
                       });
-                      _context2.prev = 2;
-                      _context2.next = 5;
-                      return this.http.post("http://localhost/api/token/refresh", credentials, {
-                        headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpHeaders"]({
-                          "Content-Type": "application/json"
-                        }),
-                        observe: 'response'
-                      }).toPromise();
+                      _context9.prev = 2;
+                      _context9.next = 5;
+                      return this.httpService.refresh(credentials);
 
                     case 5:
-                      response = _context2.sent;
-                      // If token refresh is successful, set new tokens in local storage.
+                      response = _context9.sent;
                       newToken = response.body.accessToken;
                       newRefreshToken = response.body.refreshToken;
                       localStorage.setItem("jwt", newToken);
                       localStorage.setItem("refreshToken", newRefreshToken);
                       isRefreshSuccess = true;
-                      _context2.next = 16;
+                      _context9.next = 16;
                       break;
 
                     case 13:
-                      _context2.prev = 13;
-                      _context2.t0 = _context2["catch"](2);
+                      _context9.prev = 13;
+                      _context9.t0 = _context9["catch"](2);
                       isRefreshSuccess = false;
 
                     case 16:
-                      return _context2.abrupt("return", isRefreshSuccess);
+                      return _context9.abrupt("return", isRefreshSuccess);
 
                     case 17:
                     case "end":
-                      return _context2.stop();
+                      return _context9.stop();
                   }
                 }
-              }, _callee2, this, [[2, 13]]);
+              }, _callee9, this, [[2, 13]]);
             }));
           }
         }]);
@@ -1347,7 +1579,7 @@
       }();
 
       AppNotelist.ɵfac = function AppNotelist_Factory(t) {
-        return new (t || AppNotelist)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_Data_http_service__WEBPACK_IMPORTED_MODULE_1__["HttpService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_4__["JwtHelperService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"]));
+        return new (t || AppNotelist)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_Data_http_service__WEBPACK_IMPORTED_MODULE_1__["HttpService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_3__["JwtHelperService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClient"]));
       };
 
       AppNotelist.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({
@@ -1359,7 +1591,7 @@
         features: [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵProvidersFeature"]([_Data_http_service__WEBPACK_IMPORTED_MODULE_1__["HttpService"]])],
         decls: 5,
         vars: 1,
-        consts: [[1, "btn", "btn-success", "createButton", 3, "click"], [1, "notelistContainer", "col-md-6", "offset-md-3"], ["class", "noteContainer", 3, "selected", 4, "ngFor", "ngForOf"], [1, "noteContainer"], [1, "body", 3, "click"], [1, "noteText", 3, "ngModel", "disabled", "ngModelChange"], ["type", "text", "disabled", "", 1, "noteDate", 3, "ngModel", "ngModelChange"], [1, "buttonBlock"], [1, "btn", "btn-success", "saveButton", 3, "click"], [1, "btn", "btn-success", "canselButton", 3, "click"], [1, "btn", "btn-success", "deleteButton", 3, "click"]],
+        consts: [[1, "btn", "btn-success", "createButton", 3, "click"], [1, "notelistContainer", "col-md-6", "offset-md-3"], ["class", "noteContainer", 3, "selected", 4, "ngFor", "ngForOf"], [1, "noteContainer"], [1, "body", 3, "click"], [1, "noteText", 3, "ngModel", "disabled", "ngModelChange"], ["type", "text", "disabled", "", 1, "noteDate", 3, "ngModel", "ngModelChange"], [1, "buttonBlock"], [1, "btn", "btn-success", "saveButton", 3, "click"], [1, "btn", "btn-success", "cancelButton", 3, "click"], [1, "btn", "btn-success", "deleteButton", 3, "click"]],
         template: function AppNotelist_Template(rf, ctx) {
           if (rf & 1) {
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div");
@@ -1390,7 +1622,7 @@
           }
         },
         directives: [_angular_common__WEBPACK_IMPORTED_MODULE_5__["NgForOf"], _angular_forms__WEBPACK_IMPORTED_MODULE_6__["DefaultValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_6__["NgControlStatus"], _angular_forms__WEBPACK_IMPORTED_MODULE_6__["NgModel"]],
-        styles: [".btn[_ngcontent-%COMP%] {\n    height: 100%;\n    width: 100px;\n    float: left;\n    border: 0;\n    border-radius: 0px;\n    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;\n    font-family: Roboto; \n    font-size: 20px;\n}\n\n    .btn.selected[_ngcontent-%COMP%] {\n        margin: 5px;\n        border: 3px solid darkslategrey;\n    }\n\n    .btn[_ngcontent-%COMP%]:hover {\n        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.8);\n        transition: 0.3s;\n    }\n\n    .createButton[_ngcontent-%COMP%] {\n    height: 60px;\n    font-size: 17px;\n    background-color: deepskyblue;\n}\n\n    .saveButton[_ngcontent-%COMP%] {\n    background-color: lawngreen;\n    display: none;\n}\n\n    .saveButton.selected[_ngcontent-%COMP%] {\n        display: inline-block;\n    }\n\n    .canselButton[_ngcontent-%COMP%] {\n    background-color: orange;\n    display: none;\n}\n\n    .canselButton.selected[_ngcontent-%COMP%] {\n        display: inline-block;\n    }\n\n    .deleteButton[_ngcontent-%COMP%] {\n    background-color: red;\n}\n\n    .deleteButton.selected[_ngcontent-%COMP%] {\n        background-color: red;\n    }\n\n    .notelistContainer[_ngcontent-%COMP%] {\n    margin-top: 50px;\n}\n\n    .noteContainer[_ngcontent-%COMP%] {\n    display: flex;\n    overflow: hidden;\n    padding: 0px;\n    border: 0 solid #007BFF;\n    border-width: 0 4px 4px 4px;\n    max-height: 56px;\n    transition: max-height 0.5s;\n}\n\n    .noteContainer[_ngcontent-%COMP%]:first-child {\n        border-top: 4px solid #007BFF;\n    }\n\n    .noteContainer.selected[_ngcontent-%COMP%] {\n        display: block;\n        border: 0 solid darkblue;\n        border-width: 6px 104px 6px 6px;\n        background-color: #F4F7F9;\n        max-height: 400px;\n        transition: max-height 0.5s;\n    }\n\n    .body[_ngcontent-%COMP%]:hover:not(.selected) {\n    background-color: #F4F7F9;\n    transition: 0.3s;\n    cursor: pointer;\n}\n\n    .body[_ngcontent-%COMP%] {\n    display: flex;\n    position: relative;\n    width: 100%;\n}\n\n    .body.selected[_ngcontent-%COMP%] {\n        display: block;\n    }\n\n    .noteText[_ngcontent-%COMP%] {\n    padding: 1px 0 0 10px;\n    width: 100%;\n    overflow: hidden;\n    resize: none;\n    border: 0;\n    height: 250px;\n}\n\n    .noteText.selected[_ngcontent-%COMP%] {\n        background-color: #F4F7F9;\n        padding: 10px;\n        border-bottom: 6px solid darkblue;\n    }\n\n    .noteDate[_ngcontent-%COMP%] {\n    width: 140px;\n    padding-top: 6px;\n    float: right;\n    border-width: 0;\n    cursor: default;\n}\n\n    .noteDate.selected[_ngcontent-%COMP%] {\n        margin-top: 10px;\n        background-color: #F4F7F9;\n        transition: 0.3s;\n        cursor: pointer;\n    }\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbm90ZWxpc3QvYXBwLm5vdGVsaXN0LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtJQUNJLFlBQVk7SUFDWixZQUFZO0lBQ1osV0FBVztJQUNYLFNBQVM7SUFDVCxrQkFBa0I7SUFDbEIsaUVBQWlFO0lBQ2pFLG1CQUFtQjtJQUNuQixlQUFlO0FBQ25COztJQUVJO1FBQ0ksV0FBVztRQUNYLCtCQUErQjtJQUNuQzs7SUFFQTtRQUNJLHdDQUF3QztRQUN4QyxnQkFBZ0I7SUFDcEI7O0lBRUo7SUFDSSxZQUFZO0lBQ1osZUFBZTtJQUNmLDZCQUE2QjtBQUNqQzs7SUFFQTtJQUNJLDJCQUEyQjtJQUMzQixhQUFhO0FBQ2pCOztJQUVJO1FBQ0kscUJBQXFCO0lBQ3pCOztJQUVKO0lBQ0ksd0JBQXdCO0lBQ3hCLGFBQWE7QUFDakI7O0lBRUk7UUFDSSxxQkFBcUI7SUFDekI7O0lBRUo7SUFDSSxxQkFBcUI7QUFDekI7O0lBRUk7UUFDSSxxQkFBcUI7SUFDekI7O0lBRUo7SUFDSSxnQkFBZ0I7QUFDcEI7O0lBRUE7SUFDSSxhQUFhO0lBQ2IsZ0JBQWdCO0lBQ2hCLFlBQVk7SUFDWix1QkFBdUI7SUFDdkIsMkJBQTJCO0lBQzNCLGdCQUFnQjtJQUNoQiwyQkFBMkI7QUFDL0I7O0lBQ0k7UUFDSSw2QkFBNkI7SUFDakM7O0lBRUE7UUFDSSxjQUFjO1FBQ2Qsd0JBQXdCO1FBQ3hCLCtCQUErQjtRQUMvQix5QkFBeUI7UUFDekIsaUJBQWlCO1FBQ2pCLDJCQUEyQjtJQUMvQjs7SUFFSjtJQUNJLHlCQUF5QjtJQUN6QixnQkFBZ0I7SUFDaEIsZUFBZTtBQUNuQjs7SUFFQTtJQUNJLGFBQWE7SUFDYixrQkFBa0I7SUFDbEIsV0FBVztBQUNmOztJQUVJO1FBQ0ksY0FBYztJQUNsQjs7SUFHSjtJQUNJLHFCQUFxQjtJQUNyQixXQUFXO0lBQ1gsZ0JBQWdCO0lBQ2hCLFlBQVk7SUFDWixTQUFTO0lBQ1QsYUFBYTtBQUNqQjs7SUFFSTtRQUNJLHlCQUF5QjtRQUN6QixhQUFhO1FBQ2IsaUNBQWlDO0lBQ3JDOztJQUdKO0lBQ0ksWUFBWTtJQUNaLGdCQUFnQjtJQUNoQixZQUFZO0lBQ1osZUFBZTtJQUNmLGVBQWU7QUFDbkI7O0lBRUk7UUFDSSxnQkFBZ0I7UUFDaEIseUJBQXlCO1FBQ3pCLGdCQUFnQjtRQUNoQixlQUFlO0lBQ25CIiwiZmlsZSI6InNyYy9hcHAvbm90ZWxpc3QvYXBwLm5vdGVsaXN0LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIi5idG4ge1xuICAgIGhlaWdodDogMTAwJTtcbiAgICB3aWR0aDogMTAwcHg7XG4gICAgZmxvYXQ6IGxlZnQ7XG4gICAgYm9yZGVyOiAwO1xuICAgIGJvcmRlci1yYWRpdXM6IDBweDtcbiAgICB0ZXh0LXNoYWRvdzogLTFweCAwIGJsYWNrLCAwIDFweCBibGFjaywgMXB4IDAgYmxhY2ssIDAgLTFweCBibGFjaztcbiAgICBmb250LWZhbWlseTogUm9ib3RvOyBcbiAgICBmb250LXNpemU6IDIwcHg7XG59XG5cbiAgICAuYnRuLnNlbGVjdGVkIHtcbiAgICAgICAgbWFyZ2luOiA1cHg7XG4gICAgICAgIGJvcmRlcjogM3B4IHNvbGlkIGRhcmtzbGF0ZWdyZXk7XG4gICAgfVxuXG4gICAgLmJ0bjpob3ZlciB7XG4gICAgICAgIGJveC1zaGFkb3c6IDAgMCAwIDJweCByZ2JhKDAsIDAsIDAsIDAuOCk7XG4gICAgICAgIHRyYW5zaXRpb246IDAuM3M7XG4gICAgfVxuXG4uY3JlYXRlQnV0dG9uIHtcbiAgICBoZWlnaHQ6IDYwcHg7XG4gICAgZm9udC1zaXplOiAxN3B4O1xuICAgIGJhY2tncm91bmQtY29sb3I6IGRlZXBza3libHVlO1xufVxuXG4uc2F2ZUJ1dHRvbiB7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogbGF3bmdyZWVuO1xuICAgIGRpc3BsYXk6IG5vbmU7XG59XG5cbiAgICAuc2F2ZUJ1dHRvbi5zZWxlY3RlZCB7XG4gICAgICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgICB9XG5cbi5jYW5zZWxCdXR0b24ge1xuICAgIGJhY2tncm91bmQtY29sb3I6IG9yYW5nZTtcbiAgICBkaXNwbGF5OiBub25lO1xufVxuXG4gICAgLmNhbnNlbEJ1dHRvbi5zZWxlY3RlZCB7XG4gICAgICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgICB9XG5cbi5kZWxldGVCdXR0b24ge1xuICAgIGJhY2tncm91bmQtY29sb3I6IHJlZDtcbn1cblxuICAgIC5kZWxldGVCdXR0b24uc2VsZWN0ZWQge1xuICAgICAgICBiYWNrZ3JvdW5kLWNvbG9yOiByZWQ7XG4gICAgfVxuXG4ubm90ZWxpc3RDb250YWluZXIge1xuICAgIG1hcmdpbi10b3A6IDUwcHg7XG59XG5cbi5ub3RlQ29udGFpbmVyIHtcbiAgICBkaXNwbGF5OiBmbGV4O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG4gICAgcGFkZGluZzogMHB4O1xuICAgIGJvcmRlcjogMCBzb2xpZCAjMDA3QkZGO1xuICAgIGJvcmRlci13aWR0aDogMCA0cHggNHB4IDRweDtcbiAgICBtYXgtaGVpZ2h0OiA1NnB4O1xuICAgIHRyYW5zaXRpb246IG1heC1oZWlnaHQgMC41cztcbn1cbiAgICAubm90ZUNvbnRhaW5lcjpmaXJzdC1jaGlsZCB7XG4gICAgICAgIGJvcmRlci10b3A6IDRweCBzb2xpZCAjMDA3QkZGO1xuICAgIH1cblxuICAgIC5ub3RlQ29udGFpbmVyLnNlbGVjdGVkIHtcbiAgICAgICAgZGlzcGxheTogYmxvY2s7XG4gICAgICAgIGJvcmRlcjogMCBzb2xpZCBkYXJrYmx1ZTtcbiAgICAgICAgYm9yZGVyLXdpZHRoOiA2cHggMTA0cHggNnB4IDZweDtcbiAgICAgICAgYmFja2dyb3VuZC1jb2xvcjogI0Y0RjdGOTtcbiAgICAgICAgbWF4LWhlaWdodDogNDAwcHg7XG4gICAgICAgIHRyYW5zaXRpb246IG1heC1oZWlnaHQgMC41cztcbiAgICB9XG5cbi5ib2R5OmhvdmVyOm5vdCguc2VsZWN0ZWQpIHtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjRjRGN0Y5O1xuICAgIHRyYW5zaXRpb246IDAuM3M7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xufVxuXG4uYm9keSB7XG4gICAgZGlzcGxheTogZmxleDtcbiAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgd2lkdGg6IDEwMCU7XG59XG5cbiAgICAuYm9keS5zZWxlY3RlZCB7XG4gICAgICAgIGRpc3BsYXk6IGJsb2NrO1xuICAgIH1cblxuXG4ubm90ZVRleHQge1xuICAgIHBhZGRpbmc6IDFweCAwIDAgMTBweDtcbiAgICB3aWR0aDogMTAwJTtcbiAgICBvdmVyZmxvdzogaGlkZGVuO1xuICAgIHJlc2l6ZTogbm9uZTtcbiAgICBib3JkZXI6IDA7XG4gICAgaGVpZ2h0OiAyNTBweDtcbn1cblxuICAgIC5ub3RlVGV4dC5zZWxlY3RlZCB7XG4gICAgICAgIGJhY2tncm91bmQtY29sb3I6ICNGNEY3Rjk7XG4gICAgICAgIHBhZGRpbmc6IDEwcHg7XG4gICAgICAgIGJvcmRlci1ib3R0b206IDZweCBzb2xpZCBkYXJrYmx1ZTtcbiAgICB9XG5cblxuLm5vdGVEYXRlIHtcbiAgICB3aWR0aDogMTQwcHg7XG4gICAgcGFkZGluZy10b3A6IDZweDtcbiAgICBmbG9hdDogcmlnaHQ7XG4gICAgYm9yZGVyLXdpZHRoOiAwO1xuICAgIGN1cnNvcjogZGVmYXVsdDtcbn1cblxuICAgIC5ub3RlRGF0ZS5zZWxlY3RlZCB7XG4gICAgICAgIG1hcmdpbi10b3A6IDEwcHg7XG4gICAgICAgIGJhY2tncm91bmQtY29sb3I6ICNGNEY3Rjk7XG4gICAgICAgIHRyYW5zaXRpb246IDAuM3M7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICB9XG5cblxuIl19 */"]
+        styles: [".btn[_ngcontent-%COMP%] {\n    height: 100%;\n    width: 100px;\n    float: left;\n    border: 0;\n    border-radius: 0px;\n    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;\n    font-family: Roboto; \n    font-size: 20px;\n}\n\n    .btn.selected[_ngcontent-%COMP%] {\n        margin: 5px;\n        border: 3px solid darkslategrey;\n    }\n\n    .btn[_ngcontent-%COMP%]:hover {\n        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.8);\n        transition: 0.3s;\n    }\n\n    .createButton[_ngcontent-%COMP%] {\n    height: 60px;\n    font-size: 17px;\n    background-color: deepskyblue;\n}\n\n    .saveButton[_ngcontent-%COMP%] {\n    background-color: lawngreen;\n    display: none;\n}\n\n    .saveButton.selected[_ngcontent-%COMP%] {\n        display: inline-block;\n    }\n\n    .cancelButton[_ngcontent-%COMP%] {\n    background-color: orange;\n    display: none;\n}\n\n    .cancelButton.selected[_ngcontent-%COMP%] {\n        display: inline-block;\n    }\n\n    .deleteButton[_ngcontent-%COMP%] {\n    background-color: red;\n}\n\n    .deleteButton.selected[_ngcontent-%COMP%] {\n        background-color: red;\n    }\n\n    .notelistContainer[_ngcontent-%COMP%] {\n    margin-top: 50px;\n}\n\n    .noteContainer[_ngcontent-%COMP%] {\n    display: flex;\n    overflow: hidden;\n    padding: 0px;\n    border: 0 solid #007BFF;\n    border-width: 0 4px 4px 4px;\n    max-height: 56px;\n    transition: max-height 0.5s;\n}\n\n    .noteContainer[_ngcontent-%COMP%]:first-child {\n        border-top: 4px solid #007BFF;\n    }\n\n    .noteContainer.selected[_ngcontent-%COMP%] {\n        display: block;\n        border: 0 solid darkblue;\n        border-width: 6px 104px 6px 6px;\n        background-color: #F4F7F9;\n        max-height: 400px;\n        transition: max-height 0.5s;\n    }\n\n    .body[_ngcontent-%COMP%]:hover:not(.selected) {\n    background-color: #F4F7F9;\n    transition: 0.3s;\n    cursor: pointer;\n}\n\n    .body[_ngcontent-%COMP%] {\n    display: flex;\n    position: relative;\n    width: 100%;\n}\n\n    .body.selected[_ngcontent-%COMP%] {\n        display: block;\n    }\n\n    .noteText[_ngcontent-%COMP%] {\n    padding: 1px 0 0 10px;\n    width: 100%;\n    overflow: hidden;\n    resize: none;\n    border: 0;\n    height: 250px;\n}\n\n    .noteText.selected[_ngcontent-%COMP%] {\n        background-color: #F4F7F9;\n        padding: 10px;\n        border-bottom: 6px solid darkblue;\n    }\n\n    .noteDate[_ngcontent-%COMP%] {\n    width: 140px;\n    padding-top: 6px;\n    float: right;\n    border-width: 0;\n    cursor: default;\n}\n\n    .noteDate.selected[_ngcontent-%COMP%] {\n        margin-top: 10px;\n        background-color: #F4F7F9;\n        transition: 0.3s;\n        cursor: pointer;\n    }\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbm90ZWxpc3QvYXBwLm5vdGVsaXN0LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtJQUNJLFlBQVk7SUFDWixZQUFZO0lBQ1osV0FBVztJQUNYLFNBQVM7SUFDVCxrQkFBa0I7SUFDbEIsaUVBQWlFO0lBQ2pFLG1CQUFtQjtJQUNuQixlQUFlO0FBQ25COztJQUVJO1FBQ0ksV0FBVztRQUNYLCtCQUErQjtJQUNuQzs7SUFFQTtRQUNJLHdDQUF3QztRQUN4QyxnQkFBZ0I7SUFDcEI7O0lBRUo7SUFDSSxZQUFZO0lBQ1osZUFBZTtJQUNmLDZCQUE2QjtBQUNqQzs7SUFFQTtJQUNJLDJCQUEyQjtJQUMzQixhQUFhO0FBQ2pCOztJQUVJO1FBQ0kscUJBQXFCO0lBQ3pCOztJQUVKO0lBQ0ksd0JBQXdCO0lBQ3hCLGFBQWE7QUFDakI7O0lBRUk7UUFDSSxxQkFBcUI7SUFDekI7O0lBRUo7SUFDSSxxQkFBcUI7QUFDekI7O0lBRUk7UUFDSSxxQkFBcUI7SUFDekI7O0lBRUo7SUFDSSxnQkFBZ0I7QUFDcEI7O0lBRUE7SUFDSSxhQUFhO0lBQ2IsZ0JBQWdCO0lBQ2hCLFlBQVk7SUFDWix1QkFBdUI7SUFDdkIsMkJBQTJCO0lBQzNCLGdCQUFnQjtJQUNoQiwyQkFBMkI7QUFDL0I7O0lBQ0k7UUFDSSw2QkFBNkI7SUFDakM7O0lBRUE7UUFDSSxjQUFjO1FBQ2Qsd0JBQXdCO1FBQ3hCLCtCQUErQjtRQUMvQix5QkFBeUI7UUFDekIsaUJBQWlCO1FBQ2pCLDJCQUEyQjtJQUMvQjs7SUFFSjtJQUNJLHlCQUF5QjtJQUN6QixnQkFBZ0I7SUFDaEIsZUFBZTtBQUNuQjs7SUFFQTtJQUNJLGFBQWE7SUFDYixrQkFBa0I7SUFDbEIsV0FBVztBQUNmOztJQUVJO1FBQ0ksY0FBYztJQUNsQjs7SUFHSjtJQUNJLHFCQUFxQjtJQUNyQixXQUFXO0lBQ1gsZ0JBQWdCO0lBQ2hCLFlBQVk7SUFDWixTQUFTO0lBQ1QsYUFBYTtBQUNqQjs7SUFFSTtRQUNJLHlCQUF5QjtRQUN6QixhQUFhO1FBQ2IsaUNBQWlDO0lBQ3JDOztJQUdKO0lBQ0ksWUFBWTtJQUNaLGdCQUFnQjtJQUNoQixZQUFZO0lBQ1osZUFBZTtJQUNmLGVBQWU7QUFDbkI7O0lBRUk7UUFDSSxnQkFBZ0I7UUFDaEIseUJBQXlCO1FBQ3pCLGdCQUFnQjtRQUNoQixlQUFlO0lBQ25CIiwiZmlsZSI6InNyYy9hcHAvbm90ZWxpc3QvYXBwLm5vdGVsaXN0LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIi5idG4ge1xuICAgIGhlaWdodDogMTAwJTtcbiAgICB3aWR0aDogMTAwcHg7XG4gICAgZmxvYXQ6IGxlZnQ7XG4gICAgYm9yZGVyOiAwO1xuICAgIGJvcmRlci1yYWRpdXM6IDBweDtcbiAgICB0ZXh0LXNoYWRvdzogLTFweCAwIGJsYWNrLCAwIDFweCBibGFjaywgMXB4IDAgYmxhY2ssIDAgLTFweCBibGFjaztcbiAgICBmb250LWZhbWlseTogUm9ib3RvOyBcbiAgICBmb250LXNpemU6IDIwcHg7XG59XG5cbiAgICAuYnRuLnNlbGVjdGVkIHtcbiAgICAgICAgbWFyZ2luOiA1cHg7XG4gICAgICAgIGJvcmRlcjogM3B4IHNvbGlkIGRhcmtzbGF0ZWdyZXk7XG4gICAgfVxuXG4gICAgLmJ0bjpob3ZlciB7XG4gICAgICAgIGJveC1zaGFkb3c6IDAgMCAwIDJweCByZ2JhKDAsIDAsIDAsIDAuOCk7XG4gICAgICAgIHRyYW5zaXRpb246IDAuM3M7XG4gICAgfVxuXG4uY3JlYXRlQnV0dG9uIHtcbiAgICBoZWlnaHQ6IDYwcHg7XG4gICAgZm9udC1zaXplOiAxN3B4O1xuICAgIGJhY2tncm91bmQtY29sb3I6IGRlZXBza3libHVlO1xufVxuXG4uc2F2ZUJ1dHRvbiB7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogbGF3bmdyZWVuO1xuICAgIGRpc3BsYXk6IG5vbmU7XG59XG5cbiAgICAuc2F2ZUJ1dHRvbi5zZWxlY3RlZCB7XG4gICAgICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgICB9XG5cbi5jYW5jZWxCdXR0b24ge1xuICAgIGJhY2tncm91bmQtY29sb3I6IG9yYW5nZTtcbiAgICBkaXNwbGF5OiBub25lO1xufVxuXG4gICAgLmNhbmNlbEJ1dHRvbi5zZWxlY3RlZCB7XG4gICAgICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgICB9XG5cbi5kZWxldGVCdXR0b24ge1xuICAgIGJhY2tncm91bmQtY29sb3I6IHJlZDtcbn1cblxuICAgIC5kZWxldGVCdXR0b24uc2VsZWN0ZWQge1xuICAgICAgICBiYWNrZ3JvdW5kLWNvbG9yOiByZWQ7XG4gICAgfVxuXG4ubm90ZWxpc3RDb250YWluZXIge1xuICAgIG1hcmdpbi10b3A6IDUwcHg7XG59XG5cbi5ub3RlQ29udGFpbmVyIHtcbiAgICBkaXNwbGF5OiBmbGV4O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG4gICAgcGFkZGluZzogMHB4O1xuICAgIGJvcmRlcjogMCBzb2xpZCAjMDA3QkZGO1xuICAgIGJvcmRlci13aWR0aDogMCA0cHggNHB4IDRweDtcbiAgICBtYXgtaGVpZ2h0OiA1NnB4O1xuICAgIHRyYW5zaXRpb246IG1heC1oZWlnaHQgMC41cztcbn1cbiAgICAubm90ZUNvbnRhaW5lcjpmaXJzdC1jaGlsZCB7XG4gICAgICAgIGJvcmRlci10b3A6IDRweCBzb2xpZCAjMDA3QkZGO1xuICAgIH1cblxuICAgIC5ub3RlQ29udGFpbmVyLnNlbGVjdGVkIHtcbiAgICAgICAgZGlzcGxheTogYmxvY2s7XG4gICAgICAgIGJvcmRlcjogMCBzb2xpZCBkYXJrYmx1ZTtcbiAgICAgICAgYm9yZGVyLXdpZHRoOiA2cHggMTA0cHggNnB4IDZweDtcbiAgICAgICAgYmFja2dyb3VuZC1jb2xvcjogI0Y0RjdGOTtcbiAgICAgICAgbWF4LWhlaWdodDogNDAwcHg7XG4gICAgICAgIHRyYW5zaXRpb246IG1heC1oZWlnaHQgMC41cztcbiAgICB9XG5cbi5ib2R5OmhvdmVyOm5vdCguc2VsZWN0ZWQpIHtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjRjRGN0Y5O1xuICAgIHRyYW5zaXRpb246IDAuM3M7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xufVxuXG4uYm9keSB7XG4gICAgZGlzcGxheTogZmxleDtcbiAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgd2lkdGg6IDEwMCU7XG59XG5cbiAgICAuYm9keS5zZWxlY3RlZCB7XG4gICAgICAgIGRpc3BsYXk6IGJsb2NrO1xuICAgIH1cblxuXG4ubm90ZVRleHQge1xuICAgIHBhZGRpbmc6IDFweCAwIDAgMTBweDtcbiAgICB3aWR0aDogMTAwJTtcbiAgICBvdmVyZmxvdzogaGlkZGVuO1xuICAgIHJlc2l6ZTogbm9uZTtcbiAgICBib3JkZXI6IDA7XG4gICAgaGVpZ2h0OiAyNTBweDtcbn1cblxuICAgIC5ub3RlVGV4dC5zZWxlY3RlZCB7XG4gICAgICAgIGJhY2tncm91bmQtY29sb3I6ICNGNEY3Rjk7XG4gICAgICAgIHBhZGRpbmc6IDEwcHg7XG4gICAgICAgIGJvcmRlci1ib3R0b206IDZweCBzb2xpZCBkYXJrYmx1ZTtcbiAgICB9XG5cblxuLm5vdGVEYXRlIHtcbiAgICB3aWR0aDogMTQwcHg7XG4gICAgcGFkZGluZy10b3A6IDZweDtcbiAgICBmbG9hdDogcmlnaHQ7XG4gICAgYm9yZGVyLXdpZHRoOiAwO1xuICAgIGN1cnNvcjogZGVmYXVsdDtcbn1cblxuICAgIC5ub3RlRGF0ZS5zZWxlY3RlZCB7XG4gICAgICAgIG1hcmdpbi10b3A6IDEwcHg7XG4gICAgICAgIGJhY2tncm91bmQtY29sb3I6ICNGNEY3Rjk7XG4gICAgICAgIHRyYW5zaXRpb246IDAuM3M7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICB9XG5cblxuIl19 */"]
       });
       /*@__PURE__*/
 
@@ -1407,9 +1639,9 @@
           return [{
             type: _Data_http_service__WEBPACK_IMPORTED_MODULE_1__["HttpService"]
           }, {
-            type: _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_4__["JwtHelperService"]
+            type: _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_3__["JwtHelperService"]
           }, {
-            type: _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"]
+            type: _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClient"]
           }];
         }, {
           onChangedUserName: [{

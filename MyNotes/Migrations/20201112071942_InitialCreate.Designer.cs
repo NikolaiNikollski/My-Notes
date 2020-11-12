@@ -8,7 +8,7 @@ using MyNotes.Models;
 namespace MyNotes.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20201106075509_InitialCreate")]
+    [Migration("20201112071942_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -19,7 +19,7 @@ namespace MyNotes.Migrations
 
             modelBuilder.Entity("MyNotes.Data.NoteModel.Note", b =>
                 {
-                    b.Property<int>("NoteId")
+                    b.Property<ulong>("NoteId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 

@@ -17,7 +17,7 @@ namespace MyNotes.Migrations
 
             modelBuilder.Entity("MyNotes.Data.NoteModel.Note", b =>
                 {
-                    b.Property<int>("NoteId")
+                    b.Property<ulong>("NoteId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 

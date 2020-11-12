@@ -26,7 +26,7 @@ namespace MyNotes.Migrations
                 name: "Notes",
                 columns: table => new
                 {
-                    NoteId = table.Column<int>(nullable: false)
+                    NoteId = table.Column<ulong>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Text = table.Column<string>(nullable: true),
                     Date = table.Column<string>(nullable: true),

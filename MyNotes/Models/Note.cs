@@ -11,7 +11,7 @@ namespace MyNotes.Data.NoteModel
 {
     public class Note
     {
-        public int NoteId { get; set; }
+        public ulong NoteId { get; set; }
         public string Text { get; set; }
         public string Date { get; set; }
             

@@ -60,6 +60,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm2015/operators/index.js");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/http.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 
 
 
@@ -106,6 +115,17 @@ class HttpService {
             headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({
                 "Content-Type": "application/json"
             })
+        });
+    }
+    refresh(credentials) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.http.post(this.urlAccount + '/refresh', credentials, {
+                headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({
+                    "Content-Type": "application/json"
+                }),
+                observe: 'response'
+            }).toPromise();
+            return response;
         });
     }
 }
@@ -447,6 +467,8 @@ class AppMain {
         this.userAuthenticated = increased;
     }
     onChangedUserName(newUserName) {
+        if (newUserName === '')
+            this.userAuthenticated = false;
         this.userName = newUserName;
     }
     isUserAuthenticated() {
@@ -493,8 +515,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
 /* harmony import */ var _Data_http_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Data/http.service */ "./src/app/Data/http.service.ts");
 /* harmony import */ var _Data_Note__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Data/Note */ "./src/app/Data/Note.ts");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/http.js");
-/* harmony import */ var _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @auth0/angular-jwt */ "./node_modules/@auth0/angular-jwt/__ivy_ngcc__/fesm2015/auth0-angular-jwt.js");
+/* harmony import */ var _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @auth0/angular-jwt */ "./node_modules/@auth0/angular-jwt/__ivy_ngcc__/fesm2015/auth0-angular-jwt.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/http.js");
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/__ivy_ngcc__/fesm2015/forms.js");
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
@@ -506,7 +528,6 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-
 
 
 
@@ -535,7 +556,7 @@ function AppNotelist_div_4_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](7, "button", 9);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function AppNotelist_div_4_Template_button_click_7_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r4); const note_r1 = ctx.$implicit; const index_r2 = ctx.index; const ctx_r8 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r8.unselectNote(note_r1, index_r2); });
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](8, "Cansel");
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](8, "Cancel");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](9, "button", 10);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function AppNotelist_div_4_Template_button_click_9_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r4); const note_r1 = ctx.$implicit; const index_r2 = ctx.index; const ctx_r9 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r9.del(note_r1, index_r2); });
@@ -570,50 +591,70 @@ class AppNotelist {
         this.notelist = [];
     }
     createNote() {
-        if (!this.canActivate())
-            return;
-        let note = new _Data_Note__WEBPACK_IMPORTED_MODULE_2__["Note"]("", this.formateDate(new Date), null);
-        this.httpService.save(note).subscribe((id) => {
-            note.Id = id;
+        return __awaiter(this, void 0, void 0, function* () {
+            let canActivatePromise = yield this.canActivate();
+            if (!canActivatePromise)
+                return;
+            let note = new _Data_Note__WEBPACK_IMPORTED_MODULE_2__["Note"]("", this.formateDate(new Date), null);
+            this.httpService.save(note).subscribe((id) => {
+                note.Id = id;
+            });
+            this.notelist.unshift(note);
+            setTimeout(() => {
+                note.Selected = true;
+            }, 100);
         });
-        this.notelist.unshift(note);
-        setTimeout(() => {
-            note.Selected = true;
-        }, 100);
     }
     update(note) {
-        if (!this.canActivate())
-            return;
-        this.httpService.update(note).subscribe();
-        note.Selected = false;
-        note.TempText = null;
+        return __awaiter(this, void 0, void 0, function* () {
+            let canActivatePromise = yield this.canActivate();
+            if (!canActivatePromise)
+                return;
+            this.httpService.update(note).subscribe();
+            note.Selected = false;
+            note.TempText = null;
+        });
     }
     del(note, index) {
-        if (!this.canActivate())
-            return;
-        this.httpService.delete(note).subscribe();
-        note.Selected = false;
-        this.notelist.splice(index, 1);
+        return __awaiter(this, void 0, void 0, function* () {
+            let canActivatePromise = yield this.canActivate();
+            if (!canActivatePromise)
+                return;
+            if (!this.canActivate())
+                return;
+            this.httpService.delete(note).subscribe();
+            note.Selected = false;
+            this.notelist.splice(index, 1);
+        });
     }
     selectNote(note) {
-        if (!this.canActivate())
-            return;
-        note.Selected = true;
-        note.TempText = note.Text;
+        return __awaiter(this, void 0, void 0, function* () {
+            let canActivatePromise = yield this.canActivate();
+            if (!canActivatePromise)
+                return;
+            note.Selected = true;
+            note.TempText = note.Text;
+        });
     }
     unselectNote(note, index) {
-        if (!this.canActivate())
-            return;
-        note.Selected = false;
-        note.Text = note.TempText;
-        note.TempText = null;
+        return __awaiter(this, void 0, void 0, function* () {
+            let canActivatePromise = yield this.canActivate();
+            if (!canActivatePromise)
+                return;
+            note.Selected = false;
+            note.Text = note.TempText;
+            note.TempText = null;
+        });
     }
     loadNotes() {
-        if (!this.canActivate())
-            return;
-        this.httpService.loadNotes().subscribe((data) => {
-            this.notelist = data.notes;
-            this.onChangedUserName.emit(data.name);
+        return __awaiter(this, void 0, void 0, function* () {
+            let canActivatePromise = yield this.canActivate();
+            if (!canActivatePromise)
+                return;
+            this.httpService.loadNotes().subscribe((data) => {
+                this.notelist = data.notes;
+                this.onChangedUserName.emit(data.name);
+            });
         });
     }
     ngOnInit() {
@@ -631,29 +672,22 @@ class AppNotelist {
     canActivate() {
         return __awaiter(this, void 0, void 0, function* () {
             const token = localStorage.getItem("jwt");
-            if (token && !this.jwtHelper.isTokenExpired(token)) {
+            if (token && !this.jwtHelper.isTokenExpired(token))
                 return true;
-            }
-            const isRefreshSuccess = yield this.tryRefreshingTokens(token);
-            if (!isRefreshSuccess) {
-                this.onChangedUserName.emit("");
-            }
+            let refreshSuccessPromise = yield this.tryRefreshingTokens(token);
+            if (refreshSuccessPromise)
+                return true;
+            this.onChangedUserName.emit("");
+            return false;
         });
     }
     tryRefreshingTokens(token) {
         return __awaiter(this, void 0, void 0, function* () {
-            // Try refreshing tokens using refresh token
             const refreshToken = localStorage.getItem("refreshToken");
             const credentials = JSON.stringify({ accessToken: token, refreshToken: refreshToken });
             let isRefreshSuccess;
             try {
-                const response = yield this.http.post("http://localhost/api/token/refresh", credentials, {
-                    headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpHeaders"]({
-                        "Content-Type": "application/json"
-                    }),
-                    observe: 'response'
-                }).toPromise();
-                // If token refresh is successful, set new tokens in local storage.
+                const response = yield this.httpService.refresh(credentials);
                 const newToken = response.body.accessToken;
                 const newRefreshToken = response.body.refreshToken;
                 localStorage.setItem("jwt", newToken);
@@ -667,8 +701,8 @@ class AppNotelist {
         });
     }
 }
-AppNotelist.ɵfac = function AppNotelist_Factory(t) { return new (t || AppNotelist)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_Data_http_service__WEBPACK_IMPORTED_MODULE_1__["HttpService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_4__["JwtHelperService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"])); };
-AppNotelist.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: AppNotelist, selectors: [["notelist"]], outputs: { onChangedUserName: "onChangedUserName" }, features: [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵProvidersFeature"]([_Data_http_service__WEBPACK_IMPORTED_MODULE_1__["HttpService"]])], decls: 5, vars: 1, consts: [[1, "btn", "btn-success", "createButton", 3, "click"], [1, "notelistContainer", "col-md-6", "offset-md-3"], ["class", "noteContainer", 3, "selected", 4, "ngFor", "ngForOf"], [1, "noteContainer"], [1, "body", 3, "click"], [1, "noteText", 3, "ngModel", "disabled", "ngModelChange"], ["type", "text", "disabled", "", 1, "noteDate", 3, "ngModel", "ngModelChange"], [1, "buttonBlock"], [1, "btn", "btn-success", "saveButton", 3, "click"], [1, "btn", "btn-success", "canselButton", 3, "click"], [1, "btn", "btn-success", "deleteButton", 3, "click"]], template: function AppNotelist_Template(rf, ctx) { if (rf & 1) {
+AppNotelist.ɵfac = function AppNotelist_Factory(t) { return new (t || AppNotelist)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_Data_http_service__WEBPACK_IMPORTED_MODULE_1__["HttpService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_3__["JwtHelperService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClient"])); };
+AppNotelist.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: AppNotelist, selectors: [["notelist"]], outputs: { onChangedUserName: "onChangedUserName" }, features: [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵProvidersFeature"]([_Data_http_service__WEBPACK_IMPORTED_MODULE_1__["HttpService"]])], decls: 5, vars: 1, consts: [[1, "btn", "btn-success", "createButton", 3, "click"], [1, "notelistContainer", "col-md-6", "offset-md-3"], ["class", "noteContainer", 3, "selected", 4, "ngFor", "ngForOf"], [1, "noteContainer"], [1, "body", 3, "click"], [1, "noteText", 3, "ngModel", "disabled", "ngModelChange"], ["type", "text", "disabled", "", 1, "noteDate", 3, "ngModel", "ngModelChange"], [1, "buttonBlock"], [1, "btn", "btn-success", "saveButton", 3, "click"], [1, "btn", "btn-success", "cancelButton", 3, "click"], [1, "btn", "btn-success", "deleteButton", 3, "click"]], template: function AppNotelist_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "button", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function AppNotelist_Template_button_click_1_listener() { return ctx.createNote(); });
@@ -681,7 +715,7 @@ AppNotelist.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineCompon
     } if (rf & 2) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](4);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx.notelist);
-    } }, directives: [_angular_common__WEBPACK_IMPORTED_MODULE_5__["NgForOf"], _angular_forms__WEBPACK_IMPORTED_MODULE_6__["DefaultValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_6__["NgControlStatus"], _angular_forms__WEBPACK_IMPORTED_MODULE_6__["NgModel"]], styles: [".btn[_ngcontent-%COMP%] {\n    height: 100%;\n    width: 100px;\n    float: left;\n    border: 0;\n    border-radius: 0px;\n    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;\n    font-family: Roboto; \n    font-size: 20px;\n}\n\n    .btn.selected[_ngcontent-%COMP%] {\n        margin: 5px;\n        border: 3px solid darkslategrey;\n    }\n\n    .btn[_ngcontent-%COMP%]:hover {\n        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.8);\n        transition: 0.3s;\n    }\n\n    .createButton[_ngcontent-%COMP%] {\n    height: 60px;\n    font-size: 17px;\n    background-color: deepskyblue;\n}\n\n    .saveButton[_ngcontent-%COMP%] {\n    background-color: lawngreen;\n    display: none;\n}\n\n    .saveButton.selected[_ngcontent-%COMP%] {\n        display: inline-block;\n    }\n\n    .canselButton[_ngcontent-%COMP%] {\n    background-color: orange;\n    display: none;\n}\n\n    .canselButton.selected[_ngcontent-%COMP%] {\n        display: inline-block;\n    }\n\n    .deleteButton[_ngcontent-%COMP%] {\n    background-color: red;\n}\n\n    .deleteButton.selected[_ngcontent-%COMP%] {\n        background-color: red;\n    }\n\n    .notelistContainer[_ngcontent-%COMP%] {\n    margin-top: 50px;\n}\n\n    .noteContainer[_ngcontent-%COMP%] {\n    display: flex;\n    overflow: hidden;\n    padding: 0px;\n    border: 0 solid #007BFF;\n    border-width: 0 4px 4px 4px;\n    max-height: 56px;\n    transition: max-height 0.5s;\n}\n\n    .noteContainer[_ngcontent-%COMP%]:first-child {\n        border-top: 4px solid #007BFF;\n    }\n\n    .noteContainer.selected[_ngcontent-%COMP%] {\n        display: block;\n        border: 0 solid darkblue;\n        border-width: 6px 104px 6px 6px;\n        background-color: #F4F7F9;\n        max-height: 400px;\n        transition: max-height 0.5s;\n    }\n\n    .body[_ngcontent-%COMP%]:hover:not(.selected) {\n    background-color: #F4F7F9;\n    transition: 0.3s;\n    cursor: pointer;\n}\n\n    .body[_ngcontent-%COMP%] {\n    display: flex;\n    position: relative;\n    width: 100%;\n}\n\n    .body.selected[_ngcontent-%COMP%] {\n        display: block;\n    }\n\n    .noteText[_ngcontent-%COMP%] {\n    padding: 1px 0 0 10px;\n    width: 100%;\n    overflow: hidden;\n    resize: none;\n    border: 0;\n    height: 250px;\n}\n\n    .noteText.selected[_ngcontent-%COMP%] {\n        background-color: #F4F7F9;\n        padding: 10px;\n        border-bottom: 6px solid darkblue;\n    }\n\n    .noteDate[_ngcontent-%COMP%] {\n    width: 140px;\n    padding-top: 6px;\n    float: right;\n    border-width: 0;\n    cursor: default;\n}\n\n    .noteDate.selected[_ngcontent-%COMP%] {\n        margin-top: 10px;\n        background-color: #F4F7F9;\n        transition: 0.3s;\n        cursor: pointer;\n    }\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbm90ZWxpc3QvYXBwLm5vdGVsaXN0LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtJQUNJLFlBQVk7SUFDWixZQUFZO0lBQ1osV0FBVztJQUNYLFNBQVM7SUFDVCxrQkFBa0I7SUFDbEIsaUVBQWlFO0lBQ2pFLG1CQUFtQjtJQUNuQixlQUFlO0FBQ25COztJQUVJO1FBQ0ksV0FBVztRQUNYLCtCQUErQjtJQUNuQzs7SUFFQTtRQUNJLHdDQUF3QztRQUN4QyxnQkFBZ0I7SUFDcEI7O0lBRUo7SUFDSSxZQUFZO0lBQ1osZUFBZTtJQUNmLDZCQUE2QjtBQUNqQzs7SUFFQTtJQUNJLDJCQUEyQjtJQUMzQixhQUFhO0FBQ2pCOztJQUVJO1FBQ0kscUJBQXFCO0lBQ3pCOztJQUVKO0lBQ0ksd0JBQXdCO0lBQ3hCLGFBQWE7QUFDakI7O0lBRUk7UUFDSSxxQkFBcUI7SUFDekI7O0lBRUo7SUFDSSxxQkFBcUI7QUFDekI7O0lBRUk7UUFDSSxxQkFBcUI7SUFDekI7O0lBRUo7SUFDSSxnQkFBZ0I7QUFDcEI7O0lBRUE7SUFDSSxhQUFhO0lBQ2IsZ0JBQWdCO0lBQ2hCLFlBQVk7SUFDWix1QkFBdUI7SUFDdkIsMkJBQTJCO0lBQzNCLGdCQUFnQjtJQUNoQiwyQkFBMkI7QUFDL0I7O0lBQ0k7UUFDSSw2QkFBNkI7SUFDakM7O0lBRUE7UUFDSSxjQUFjO1FBQ2Qsd0JBQXdCO1FBQ3hCLCtCQUErQjtRQUMvQix5QkFBeUI7UUFDekIsaUJBQWlCO1FBQ2pCLDJCQUEyQjtJQUMvQjs7SUFFSjtJQUNJLHlCQUF5QjtJQUN6QixnQkFBZ0I7SUFDaEIsZUFBZTtBQUNuQjs7SUFFQTtJQUNJLGFBQWE7SUFDYixrQkFBa0I7SUFDbEIsV0FBVztBQUNmOztJQUVJO1FBQ0ksY0FBYztJQUNsQjs7SUFHSjtJQUNJLHFCQUFxQjtJQUNyQixXQUFXO0lBQ1gsZ0JBQWdCO0lBQ2hCLFlBQVk7SUFDWixTQUFTO0lBQ1QsYUFBYTtBQUNqQjs7SUFFSTtRQUNJLHlCQUF5QjtRQUN6QixhQUFhO1FBQ2IsaUNBQWlDO0lBQ3JDOztJQUdKO0lBQ0ksWUFBWTtJQUNaLGdCQUFnQjtJQUNoQixZQUFZO0lBQ1osZUFBZTtJQUNmLGVBQWU7QUFDbkI7O0lBRUk7UUFDSSxnQkFBZ0I7UUFDaEIseUJBQXlCO1FBQ3pCLGdCQUFnQjtRQUNoQixlQUFlO0lBQ25CIiwiZmlsZSI6InNyYy9hcHAvbm90ZWxpc3QvYXBwLm5vdGVsaXN0LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIi5idG4ge1xuICAgIGhlaWdodDogMTAwJTtcbiAgICB3aWR0aDogMTAwcHg7XG4gICAgZmxvYXQ6IGxlZnQ7XG4gICAgYm9yZGVyOiAwO1xuICAgIGJvcmRlci1yYWRpdXM6IDBweDtcbiAgICB0ZXh0LXNoYWRvdzogLTFweCAwIGJsYWNrLCAwIDFweCBibGFjaywgMXB4IDAgYmxhY2ssIDAgLTFweCBibGFjaztcbiAgICBmb250LWZhbWlseTogUm9ib3RvOyBcbiAgICBmb250LXNpemU6IDIwcHg7XG59XG5cbiAgICAuYnRuLnNlbGVjdGVkIHtcbiAgICAgICAgbWFyZ2luOiA1cHg7XG4gICAgICAgIGJvcmRlcjogM3B4IHNvbGlkIGRhcmtzbGF0ZWdyZXk7XG4gICAgfVxuXG4gICAgLmJ0bjpob3ZlciB7XG4gICAgICAgIGJveC1zaGFkb3c6IDAgMCAwIDJweCByZ2JhKDAsIDAsIDAsIDAuOCk7XG4gICAgICAgIHRyYW5zaXRpb246IDAuM3M7XG4gICAgfVxuXG4uY3JlYXRlQnV0dG9uIHtcbiAgICBoZWlnaHQ6IDYwcHg7XG4gICAgZm9udC1zaXplOiAxN3B4O1xuICAgIGJhY2tncm91bmQtY29sb3I6IGRlZXBza3libHVlO1xufVxuXG4uc2F2ZUJ1dHRvbiB7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogbGF3bmdyZWVuO1xuICAgIGRpc3BsYXk6IG5vbmU7XG59XG5cbiAgICAuc2F2ZUJ1dHRvbi5zZWxlY3RlZCB7XG4gICAgICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgICB9XG5cbi5jYW5zZWxCdXR0b24ge1xuICAgIGJhY2tncm91bmQtY29sb3I6IG9yYW5nZTtcbiAgICBkaXNwbGF5OiBub25lO1xufVxuXG4gICAgLmNhbnNlbEJ1dHRvbi5zZWxlY3RlZCB7XG4gICAgICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgICB9XG5cbi5kZWxldGVCdXR0b24ge1xuICAgIGJhY2tncm91bmQtY29sb3I6IHJlZDtcbn1cblxuICAgIC5kZWxldGVCdXR0b24uc2VsZWN0ZWQge1xuICAgICAgICBiYWNrZ3JvdW5kLWNvbG9yOiByZWQ7XG4gICAgfVxuXG4ubm90ZWxpc3RDb250YWluZXIge1xuICAgIG1hcmdpbi10b3A6IDUwcHg7XG59XG5cbi5ub3RlQ29udGFpbmVyIHtcbiAgICBkaXNwbGF5OiBmbGV4O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG4gICAgcGFkZGluZzogMHB4O1xuICAgIGJvcmRlcjogMCBzb2xpZCAjMDA3QkZGO1xuICAgIGJvcmRlci13aWR0aDogMCA0cHggNHB4IDRweDtcbiAgICBtYXgtaGVpZ2h0OiA1NnB4O1xuICAgIHRyYW5zaXRpb246IG1heC1oZWlnaHQgMC41cztcbn1cbiAgICAubm90ZUNvbnRhaW5lcjpmaXJzdC1jaGlsZCB7XG4gICAgICAgIGJvcmRlci10b3A6IDRweCBzb2xpZCAjMDA3QkZGO1xuICAgIH1cblxuICAgIC5ub3RlQ29udGFpbmVyLnNlbGVjdGVkIHtcbiAgICAgICAgZGlzcGxheTogYmxvY2s7XG4gICAgICAgIGJvcmRlcjogMCBzb2xpZCBkYXJrYmx1ZTtcbiAgICAgICAgYm9yZGVyLXdpZHRoOiA2cHggMTA0cHggNnB4IDZweDtcbiAgICAgICAgYmFja2dyb3VuZC1jb2xvcjogI0Y0RjdGOTtcbiAgICAgICAgbWF4LWhlaWdodDogNDAwcHg7XG4gICAgICAgIHRyYW5zaXRpb246IG1heC1oZWlnaHQgMC41cztcbiAgICB9XG5cbi5ib2R5OmhvdmVyOm5vdCguc2VsZWN0ZWQpIHtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjRjRGN0Y5O1xuICAgIHRyYW5zaXRpb246IDAuM3M7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xufVxuXG4uYm9keSB7XG4gICAgZGlzcGxheTogZmxleDtcbiAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgd2lkdGg6IDEwMCU7XG59XG5cbiAgICAuYm9keS5zZWxlY3RlZCB7XG4gICAgICAgIGRpc3BsYXk6IGJsb2NrO1xuICAgIH1cblxuXG4ubm90ZVRleHQge1xuICAgIHBhZGRpbmc6IDFweCAwIDAgMTBweDtcbiAgICB3aWR0aDogMTAwJTtcbiAgICBvdmVyZmxvdzogaGlkZGVuO1xuICAgIHJlc2l6ZTogbm9uZTtcbiAgICBib3JkZXI6IDA7XG4gICAgaGVpZ2h0OiAyNTBweDtcbn1cblxuICAgIC5ub3RlVGV4dC5zZWxlY3RlZCB7XG4gICAgICAgIGJhY2tncm91bmQtY29sb3I6ICNGNEY3Rjk7XG4gICAgICAgIHBhZGRpbmc6IDEwcHg7XG4gICAgICAgIGJvcmRlci1ib3R0b206IDZweCBzb2xpZCBkYXJrYmx1ZTtcbiAgICB9XG5cblxuLm5vdGVEYXRlIHtcbiAgICB3aWR0aDogMTQwcHg7XG4gICAgcGFkZGluZy10b3A6IDZweDtcbiAgICBmbG9hdDogcmlnaHQ7XG4gICAgYm9yZGVyLXdpZHRoOiAwO1xuICAgIGN1cnNvcjogZGVmYXVsdDtcbn1cblxuICAgIC5ub3RlRGF0ZS5zZWxlY3RlZCB7XG4gICAgICAgIG1hcmdpbi10b3A6IDEwcHg7XG4gICAgICAgIGJhY2tncm91bmQtY29sb3I6ICNGNEY3Rjk7XG4gICAgICAgIHRyYW5zaXRpb246IDAuM3M7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICB9XG5cblxuIl19 */"] });
+    } }, directives: [_angular_common__WEBPACK_IMPORTED_MODULE_5__["NgForOf"], _angular_forms__WEBPACK_IMPORTED_MODULE_6__["DefaultValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_6__["NgControlStatus"], _angular_forms__WEBPACK_IMPORTED_MODULE_6__["NgModel"]], styles: [".btn[_ngcontent-%COMP%] {\n    height: 100%;\n    width: 100px;\n    float: left;\n    border: 0;\n    border-radius: 0px;\n    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;\n    font-family: Roboto; \n    font-size: 20px;\n}\n\n    .btn.selected[_ngcontent-%COMP%] {\n        margin: 5px;\n        border: 3px solid darkslategrey;\n    }\n\n    .btn[_ngcontent-%COMP%]:hover {\n        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.8);\n        transition: 0.3s;\n    }\n\n    .createButton[_ngcontent-%COMP%] {\n    height: 60px;\n    font-size: 17px;\n    background-color: deepskyblue;\n}\n\n    .saveButton[_ngcontent-%COMP%] {\n    background-color: lawngreen;\n    display: none;\n}\n\n    .saveButton.selected[_ngcontent-%COMP%] {\n        display: inline-block;\n    }\n\n    .cancelButton[_ngcontent-%COMP%] {\n    background-color: orange;\n    display: none;\n}\n\n    .cancelButton.selected[_ngcontent-%COMP%] {\n        display: inline-block;\n    }\n\n    .deleteButton[_ngcontent-%COMP%] {\n    background-color: red;\n}\n\n    .deleteButton.selected[_ngcontent-%COMP%] {\n        background-color: red;\n    }\n\n    .notelistContainer[_ngcontent-%COMP%] {\n    margin-top: 50px;\n}\n\n    .noteContainer[_ngcontent-%COMP%] {\n    display: flex;\n    overflow: hidden;\n    padding: 0px;\n    border: 0 solid #007BFF;\n    border-width: 0 4px 4px 4px;\n    max-height: 56px;\n    transition: max-height 0.5s;\n}\n\n    .noteContainer[_ngcontent-%COMP%]:first-child {\n        border-top: 4px solid #007BFF;\n    }\n\n    .noteContainer.selected[_ngcontent-%COMP%] {\n        display: block;\n        border: 0 solid darkblue;\n        border-width: 6px 104px 6px 6px;\n        background-color: #F4F7F9;\n        max-height: 400px;\n        transition: max-height 0.5s;\n    }\n\n    .body[_ngcontent-%COMP%]:hover:not(.selected) {\n    background-color: #F4F7F9;\n    transition: 0.3s;\n    cursor: pointer;\n}\n\n    .body[_ngcontent-%COMP%] {\n    display: flex;\n    position: relative;\n    width: 100%;\n}\n\n    .body.selected[_ngcontent-%COMP%] {\n        display: block;\n    }\n\n    .noteText[_ngcontent-%COMP%] {\n    padding: 1px 0 0 10px;\n    width: 100%;\n    overflow: hidden;\n    resize: none;\n    border: 0;\n    height: 250px;\n}\n\n    .noteText.selected[_ngcontent-%COMP%] {\n        background-color: #F4F7F9;\n        padding: 10px;\n        border-bottom: 6px solid darkblue;\n    }\n\n    .noteDate[_ngcontent-%COMP%] {\n    width: 140px;\n    padding-top: 6px;\n    float: right;\n    border-width: 0;\n    cursor: default;\n}\n\n    .noteDate.selected[_ngcontent-%COMP%] {\n        margin-top: 10px;\n        background-color: #F4F7F9;\n        transition: 0.3s;\n        cursor: pointer;\n    }\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbm90ZWxpc3QvYXBwLm5vdGVsaXN0LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtJQUNJLFlBQVk7SUFDWixZQUFZO0lBQ1osV0FBVztJQUNYLFNBQVM7SUFDVCxrQkFBa0I7SUFDbEIsaUVBQWlFO0lBQ2pFLG1CQUFtQjtJQUNuQixlQUFlO0FBQ25COztJQUVJO1FBQ0ksV0FBVztRQUNYLCtCQUErQjtJQUNuQzs7SUFFQTtRQUNJLHdDQUF3QztRQUN4QyxnQkFBZ0I7SUFDcEI7O0lBRUo7SUFDSSxZQUFZO0lBQ1osZUFBZTtJQUNmLDZCQUE2QjtBQUNqQzs7SUFFQTtJQUNJLDJCQUEyQjtJQUMzQixhQUFhO0FBQ2pCOztJQUVJO1FBQ0kscUJBQXFCO0lBQ3pCOztJQUVKO0lBQ0ksd0JBQXdCO0lBQ3hCLGFBQWE7QUFDakI7O0lBRUk7UUFDSSxxQkFBcUI7SUFDekI7O0lBRUo7SUFDSSxxQkFBcUI7QUFDekI7O0lBRUk7UUFDSSxxQkFBcUI7SUFDekI7O0lBRUo7SUFDSSxnQkFBZ0I7QUFDcEI7O0lBRUE7SUFDSSxhQUFhO0lBQ2IsZ0JBQWdCO0lBQ2hCLFlBQVk7SUFDWix1QkFBdUI7SUFDdkIsMkJBQTJCO0lBQzNCLGdCQUFnQjtJQUNoQiwyQkFBMkI7QUFDL0I7O0lBQ0k7UUFDSSw2QkFBNkI7SUFDakM7O0lBRUE7UUFDSSxjQUFjO1FBQ2Qsd0JBQXdCO1FBQ3hCLCtCQUErQjtRQUMvQix5QkFBeUI7UUFDekIsaUJBQWlCO1FBQ2pCLDJCQUEyQjtJQUMvQjs7SUFFSjtJQUNJLHlCQUF5QjtJQUN6QixnQkFBZ0I7SUFDaEIsZUFBZTtBQUNuQjs7SUFFQTtJQUNJLGFBQWE7SUFDYixrQkFBa0I7SUFDbEIsV0FBVztBQUNmOztJQUVJO1FBQ0ksY0FBYztJQUNsQjs7SUFHSjtJQUNJLHFCQUFxQjtJQUNyQixXQUFXO0lBQ1gsZ0JBQWdCO0lBQ2hCLFlBQVk7SUFDWixTQUFTO0lBQ1QsYUFBYTtBQUNqQjs7SUFFSTtRQUNJLHlCQUF5QjtRQUN6QixhQUFhO1FBQ2IsaUNBQWlDO0lBQ3JDOztJQUdKO0lBQ0ksWUFBWTtJQUNaLGdCQUFnQjtJQUNoQixZQUFZO0lBQ1osZUFBZTtJQUNmLGVBQWU7QUFDbkI7O0lBRUk7UUFDSSxnQkFBZ0I7UUFDaEIseUJBQXlCO1FBQ3pCLGdCQUFnQjtRQUNoQixlQUFlO0lBQ25CIiwiZmlsZSI6InNyYy9hcHAvbm90ZWxpc3QvYXBwLm5vdGVsaXN0LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIi5idG4ge1xuICAgIGhlaWdodDogMTAwJTtcbiAgICB3aWR0aDogMTAwcHg7XG4gICAgZmxvYXQ6IGxlZnQ7XG4gICAgYm9yZGVyOiAwO1xuICAgIGJvcmRlci1yYWRpdXM6IDBweDtcbiAgICB0ZXh0LXNoYWRvdzogLTFweCAwIGJsYWNrLCAwIDFweCBibGFjaywgMXB4IDAgYmxhY2ssIDAgLTFweCBibGFjaztcbiAgICBmb250LWZhbWlseTogUm9ib3RvOyBcbiAgICBmb250LXNpemU6IDIwcHg7XG59XG5cbiAgICAuYnRuLnNlbGVjdGVkIHtcbiAgICAgICAgbWFyZ2luOiA1cHg7XG4gICAgICAgIGJvcmRlcjogM3B4IHNvbGlkIGRhcmtzbGF0ZWdyZXk7XG4gICAgfVxuXG4gICAgLmJ0bjpob3ZlciB7XG4gICAgICAgIGJveC1zaGFkb3c6IDAgMCAwIDJweCByZ2JhKDAsIDAsIDAsIDAuOCk7XG4gICAgICAgIHRyYW5zaXRpb246IDAuM3M7XG4gICAgfVxuXG4uY3JlYXRlQnV0dG9uIHtcbiAgICBoZWlnaHQ6IDYwcHg7XG4gICAgZm9udC1zaXplOiAxN3B4O1xuICAgIGJhY2tncm91bmQtY29sb3I6IGRlZXBza3libHVlO1xufVxuXG4uc2F2ZUJ1dHRvbiB7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogbGF3bmdyZWVuO1xuICAgIGRpc3BsYXk6IG5vbmU7XG59XG5cbiAgICAuc2F2ZUJ1dHRvbi5zZWxlY3RlZCB7XG4gICAgICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgICB9XG5cbi5jYW5jZWxCdXR0b24ge1xuICAgIGJhY2tncm91bmQtY29sb3I6IG9yYW5nZTtcbiAgICBkaXNwbGF5OiBub25lO1xufVxuXG4gICAgLmNhbmNlbEJ1dHRvbi5zZWxlY3RlZCB7XG4gICAgICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgICB9XG5cbi5kZWxldGVCdXR0b24ge1xuICAgIGJhY2tncm91bmQtY29sb3I6IHJlZDtcbn1cblxuICAgIC5kZWxldGVCdXR0b24uc2VsZWN0ZWQge1xuICAgICAgICBiYWNrZ3JvdW5kLWNvbG9yOiByZWQ7XG4gICAgfVxuXG4ubm90ZWxpc3RDb250YWluZXIge1xuICAgIG1hcmdpbi10b3A6IDUwcHg7XG59XG5cbi5ub3RlQ29udGFpbmVyIHtcbiAgICBkaXNwbGF5OiBmbGV4O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG4gICAgcGFkZGluZzogMHB4O1xuICAgIGJvcmRlcjogMCBzb2xpZCAjMDA3QkZGO1xuICAgIGJvcmRlci13aWR0aDogMCA0cHggNHB4IDRweDtcbiAgICBtYXgtaGVpZ2h0OiA1NnB4O1xuICAgIHRyYW5zaXRpb246IG1heC1oZWlnaHQgMC41cztcbn1cbiAgICAubm90ZUNvbnRhaW5lcjpmaXJzdC1jaGlsZCB7XG4gICAgICAgIGJvcmRlci10b3A6IDRweCBzb2xpZCAjMDA3QkZGO1xuICAgIH1cblxuICAgIC5ub3RlQ29udGFpbmVyLnNlbGVjdGVkIHtcbiAgICAgICAgZGlzcGxheTogYmxvY2s7XG4gICAgICAgIGJvcmRlcjogMCBzb2xpZCBkYXJrYmx1ZTtcbiAgICAgICAgYm9yZGVyLXdpZHRoOiA2cHggMTA0cHggNnB4IDZweDtcbiAgICAgICAgYmFja2dyb3VuZC1jb2xvcjogI0Y0RjdGOTtcbiAgICAgICAgbWF4LWhlaWdodDogNDAwcHg7XG4gICAgICAgIHRyYW5zaXRpb246IG1heC1oZWlnaHQgMC41cztcbiAgICB9XG5cbi5ib2R5OmhvdmVyOm5vdCguc2VsZWN0ZWQpIHtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjRjRGN0Y5O1xuICAgIHRyYW5zaXRpb246IDAuM3M7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xufVxuXG4uYm9keSB7XG4gICAgZGlzcGxheTogZmxleDtcbiAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgd2lkdGg6IDEwMCU7XG59XG5cbiAgICAuYm9keS5zZWxlY3RlZCB7XG4gICAgICAgIGRpc3BsYXk6IGJsb2NrO1xuICAgIH1cblxuXG4ubm90ZVRleHQge1xuICAgIHBhZGRpbmc6IDFweCAwIDAgMTBweDtcbiAgICB3aWR0aDogMTAwJTtcbiAgICBvdmVyZmxvdzogaGlkZGVuO1xuICAgIHJlc2l6ZTogbm9uZTtcbiAgICBib3JkZXI6IDA7XG4gICAgaGVpZ2h0OiAyNTBweDtcbn1cblxuICAgIC5ub3RlVGV4dC5zZWxlY3RlZCB7XG4gICAgICAgIGJhY2tncm91bmQtY29sb3I6ICNGNEY3Rjk7XG4gICAgICAgIHBhZGRpbmc6IDEwcHg7XG4gICAgICAgIGJvcmRlci1ib3R0b206IDZweCBzb2xpZCBkYXJrYmx1ZTtcbiAgICB9XG5cblxuLm5vdGVEYXRlIHtcbiAgICB3aWR0aDogMTQwcHg7XG4gICAgcGFkZGluZy10b3A6IDZweDtcbiAgICBmbG9hdDogcmlnaHQ7XG4gICAgYm9yZGVyLXdpZHRoOiAwO1xuICAgIGN1cnNvcjogZGVmYXVsdDtcbn1cblxuICAgIC5ub3RlRGF0ZS5zZWxlY3RlZCB7XG4gICAgICAgIG1hcmdpbi10b3A6IDEwcHg7XG4gICAgICAgIGJhY2tncm91bmQtY29sb3I6ICNGNEY3Rjk7XG4gICAgICAgIHRyYW5zaXRpb246IDAuM3M7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICB9XG5cblxuIl19 */"] });
 /*@__PURE__*/ (function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](AppNotelist, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"],
         args: [{
@@ -690,7 +724,7 @@ AppNotelist.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineCompon
                 styleUrls: ['app.notelist.css'],
                 providers: [_Data_http_service__WEBPACK_IMPORTED_MODULE_1__["HttpService"]],
             }]
-    }], function () { return [{ type: _Data_http_service__WEBPACK_IMPORTED_MODULE_1__["HttpService"] }, { type: _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_4__["JwtHelperService"] }, { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"] }]; }, { onChangedUserName: [{
+    }], function () { return [{ type: _Data_http_service__WEBPACK_IMPORTED_MODULE_1__["HttpService"] }, { type: _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_3__["JwtHelperService"] }, { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClient"] }]; }, { onChangedUserName: [{
             type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"]
         }] }); })();
 

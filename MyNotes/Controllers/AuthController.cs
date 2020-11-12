@@ -12,6 +12,7 @@ using System;
 using AuthenticationJWT.TokenServiceData;
 using MyNotes.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
 
 namespace AuthApp.Controllers
 {
@@ -19,6 +20,13 @@ namespace AuthApp.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
+        //private readonly IConfiguration Configuration;
+
+        //public AuthController(IConfiguration configuration)
+        //{
+        //    Configuration = configuration;
+        //}
+
         private UserContext db = new UserContext();
         readonly TokenService tokenService = new TokenService();
 
@@ -38,7 +46,7 @@ namespace AuthApp.Controllers
                 return Ok(GetToken(user));
             }
             else
-                return BadRequest("User not found"); 
+                return BadRequest("Invalid username or password"); 
         }
 
         [HttpPost, Route("register")]
@@ -54,7 +62,7 @@ namespace AuthApp.Controllers
 
                 if (user != null)
                 {
-                    return BadRequest("User with this username already exists");
+                    return BadRequest("Username is busy");
                 }
 
                 user = new User();
@@ -67,7 +75,7 @@ namespace AuthApp.Controllers
             }
         }
 
-        public IActionResult GetToken(User user)
+        private IActionResult GetToken(User user)
         {
             List<Claim> claims = new List<Claim>
             {
@@ -103,9 +111,11 @@ namespace AuthApp.Controllers
             string refreshToken = tokenApiModel.RefreshToken;
 
             var principal = tokenService.GetPrincipalFromToken(accessToken);
+            if (principal == null) return BadRequest("TokenError");
             string userId = principal.Identities.ToList()[0].Claims.ToList()[2].Value;
 
             User user = db.Users.SingleOrDefault(u => u.Id == Convert.ToUInt64(userId));
+
             if (user == null || user.RefreshToken != refreshToken || new DateTime(Convert.ToInt64(user.RefreshTokenExpiryTime)) <= DateTime.Now) ///дата
             {
                 return BadRequest("Token Error");

@@ -12,29 +12,32 @@ export class HttpService {
     urlAccount: string = 'http://localhost/Api/Auth'
     constructor(private http: HttpClient) { }
 
-    save(note: Note): Observable<object> {
+    create(note: Note): Observable<object> {
         const formData = new FormData();
         formData.append('text', note.Text);
         formData.append('date', note.Date)
-        return this.http.post(this.urlNote, formData)
+        return this.http.post(this.urlNote + "/createNote", formData)
     }
 
     update(note: Note): Observable<object> {
         const formData = new FormData();
         formData.append('text', note.Text);
-        formData.append('date', note.Date)
-        return this.http.put(this.urlNote + '/' + note.Id, formData)
+        formData.append('date', note.Date);
+        formData.append('noteId', note.Id.toString());
+        return this.http.post(this.urlNote + '/updateNote', formData)
     }
 
     loadNotes(): Observable<object[]> {
       
-        return this.http.get(this.urlNote).pipe(map(data => {
+        return this.http.get(this.urlNote + '/getAllNotes').pipe(map(data => {
             return { ...data.value, notes: data.value.notes.map(note => new Note(note.text, note.date, note.noteId)) }              
         }));
     }
 
     delete(note): Observable<object> {
-        return this.http.delete(this.urlNote + '/' + note.Id)
+        const formData = new FormData();
+        formData.append('noteId', note.Id.toString());
+        return this.http.post(this.urlNote + '/deleteNote', formData)
     }
 
     login(form: NgForm): Observable<object> {

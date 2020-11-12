@@ -9,10 +9,12 @@
         </div>
         <div class="buttonBlock">
             <button [class.selected]="note.Selected" class="btn btn-success saveButton" (click)="update(note, index)">Save</button>
-            <button [class.selected]="note.Selected" class="btn btn-success canselButton" (click)="unselectNote(note, index)">Cansel</button>
+            <button [class.selected]="note.Selected" class="btn btn-success cancelButton" (click)="unselectNote(note, index)">Cancel</button>
             <button [class.selected]="note.Selected" class="btn btn-success deleteButton" (click)="del(note, index)">Delete</button>
         </div>
     </div>
 </div>
+
+
 
     

@@ -18,7 +18,7 @@
         <input type="password" name="password" ngModel class="form-control" placeholder="Password" required> <br />
 
         <button class="btn btn-lg btn-primary formButton" type="submit">Sign in</button>
-        <div *ngIf="invalidFetch" class="alert alert-danger formButton">Invalid username or password.</div>
+        <div *ngIf="error" class="alert alert-danger">{{error}}</div>
     </div>
 </form>
 
@@ -33,7 +33,6 @@
         <input type="password" name="passwordRepeat" ngModel class="form-control" placeholder="Password Repeat" required> <br />
         
         <button class="btn btn-lg btn-primary formButton" type="submit">Register</button>
-        <div *ngIf="invalidFetch" class="alert alert-danger">Username is busy.</div>
-        <div *ngIf="repeatPasswordError" class="alert alert-danger">Passwords do not match.</div>
+        <div *ngIf="error" class="alert alert-danger">{{error}}</div>
     </div>
 </form>

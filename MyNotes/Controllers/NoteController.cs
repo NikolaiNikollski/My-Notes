@@ -27,48 +27,57 @@ namespace MyNotes.Data
         readonly TokenService tokenService = new TokenService();
         UserContext db = new UserContext();
 
-        [HttpPost, Authorize]
+        [HttpPost, Authorize, Route("createNote")]
         public IActionResult CreateNote([FromForm] NoteDto inputNote)
         {
-            ulong userId = Convert.ToUInt64(tokenService.getValueFromRequestHeader(Request, "NameIdentifier"));
-            Note note = new Note { Text = inputNote.Text, Date = inputNote.Date, UserId = userId };
-
+            string userId = tokenService.GetValueFromRequestHeader(Request, "NameIdentifier");
+            if (userId == null) return BadRequest("TokenError");
+  
+            Note note = new Note { Text = inputNote.Text, Date = inputNote.Date, UserId = Convert.ToUInt64(userId) };
             EntityEntry<Note> result = db.Add(note);
             db.SaveChanges();
             return Ok(result.Entity.NoteId);
         }
 
-        [HttpPut("{id}"), Authorize]
-        public IActionResult UppdateNote(int id, [FromForm] NoteDto noteDto)
+        [HttpPost("updateNote"), Authorize]
+        public IActionResult UppdateNote([FromForm] NoteDto noteDto)
         {
-            ulong userId = Convert.ToUInt64(tokenService.getValueFromRequestHeader(Request, "NameIdentifier"));
-            Note note = db.Notes.FirstOrDefault(n => n.NoteId == id & n.UserId == userId);
+            string userId = tokenService.GetValueFromRequestHeader(Request, "NameIdentifier");
+            if (userId == null) return BadRequest("TokenError");
+
+            Note note = db.Notes.FirstOrDefault(n => n.NoteId == Convert.ToUInt64(noteDto.NoteId) & n.UserId == Convert.ToUInt64(userId));
             note.Text = noteDto.Text;
             db.SaveChanges();
             return Ok();
         }
 
-        [HttpGet, Authorize]
+        [HttpGet, Authorize, Route("getAllNotes")]
         public IActionResult GetAllNotes()
         {
-            ulong userId = Convert.ToUInt64(tokenService.getValueFromRequestHeader(Request, "NameIdentifier"));
-            var notes = db.Notes.OrderByDescending(n => n.NoteId).Where(n => n.UserId == userId);
-            return Ok( new ObjectResult( new { name = tokenService.getValueFromRequestHeader(Request, "Name"), notes = notes,}));
+            string userId = tokenService.GetValueFromRequestHeader(Request, "NameIdentifier");
+            if (userId == null) return BadRequest("TokenError");
+
+            var notes = db.Notes.OrderByDescending(n => n.Date).Where(n => n.UserId == Convert.ToUInt64(userId));
+            return Ok( new ObjectResult( new { name = tokenService.GetValueFromRequestHeader(Request, "Name"), notes = notes,}));
         }
 
-        [HttpGet("{id}"), Authorize]
-        public IActionResult GetNoteById(int id)
+        [HttpGet("{id}"), Authorize, Route("getByIdNote")]
+        public IActionResult GetNoteById(ulong id)
         {
-            ulong userId = Convert.ToUInt64(tokenService.getValueFromRequestHeader(Request, "NameIdentifier"));
-            Note note = db.Notes.FirstOrDefault(n => n.NoteId == id & n.UserId == userId);
+            string userId = tokenService.GetValueFromRequestHeader(Request, "NameIdentifier");
+            if (userId == null) return BadRequest("TokenError");
+
+            Note note = db.Notes.FirstOrDefault(n => n.NoteId == id & n.UserId == Convert.ToUInt64(userId));
             return Ok(note);
         }
 
-        [HttpDelete("{id}"), Authorize]
-        public IActionResult DeleteNote(int id)
+        [HttpPost, Authorize, Route("deleteNote")]
+        public IActionResult DeleteNote([FromForm] NoteDto noteDto)
         {
-            ulong userId = Convert.ToUInt64(tokenService.getValueFromRequestHeader(Request, "NameIdentifier"));
-            Note note = db.Notes.FirstOrDefault(n => n.NoteId == id & n.UserId == userId); ;
+            string userId = tokenService.GetValueFromRequestHeader(Request, "NameIdentifier");
+            if (userId == null) return BadRequest("TokenError");
+
+            Note note = db.Notes.FirstOrDefault(n => n.NoteId == Convert.ToUInt64(noteDto.NoteId) & n.UserId == Convert.ToUInt64(userId)); ;
             db.Remove(note);
             db.SaveChanges();
             return Ok();

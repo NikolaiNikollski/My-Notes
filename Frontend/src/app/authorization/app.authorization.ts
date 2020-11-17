@@ -122,7 +122,7 @@ export class AppAuthorization{
     }
 
     login(form: NgForm) {
-        if (this.registerForm.invalid) {
+        if (this.loginForm.invalid) {
             this._loginUsername.markAsTouched()
             this._loginPassword.markAsTouched()
             return

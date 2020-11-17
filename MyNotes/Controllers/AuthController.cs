@@ -54,9 +54,6 @@ namespace AuthApp.Controllers
             }); 
         }
 
-
-
-
         [HttpPost, Route("login")]
         public IActionResult Login([FromBody] User inputUser)
         {

@@ -1,12 +1,11 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AppMain } from './main/app.main';
 import { AppNotelist } from './notelist/app.notelist';
 import { AppAuthorization } from './authorization/app.authorization'
-
-import { JwtModule } from "@auth0/angular-jwt";
+import { JwtModule } from "@auth0/angular-jwt"; 
 
 export function tokenGetter() {
   return localStorage.getItem("jwt");
@@ -17,6 +16,8 @@ export function tokenGetter() {
         BrowserModule,
         FormsModule,
         HttpClientModule,
+        FormsModule,
+        ReactiveFormsModule,
         JwtModule.forRoot({
             config: {
                 tokenGetter: tokenGetter,

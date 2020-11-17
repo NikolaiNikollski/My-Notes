@@ -1,7 +1,6 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Note } from '../Data/Note'
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { HttpService } from '../Data/http.service'
-import { NgForm } from '@angular/forms';
+import { NgForm, Validators, FormBuilder, FormGroup, ValidatorFn, AbstractControl } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
@@ -10,74 +9,126 @@ import { HttpErrorResponse } from '@angular/common/http';
     styleUrls: ['app.authorization.css'],
     providers: [HttpService],
 })
-export class AppAuthorization {
+export class AppAuthorization{
 
-    constructor(private httpService: HttpService) { }
+    registerForm: FormGroup;
+    loginForm: FormGroup;
+
+    constructor(private fb: FormBuilder, private httpService: HttpService) {
+        this._createRegisterForm();
+        this._createLoginForm();
+    }
+
+    private _createRegisterForm() {
+        this.registerForm = this.fb.group({
+            username: ['', [
+                Validators.required,
+                Validators.minLength(3),
+            ]],
+            password: ['', [
+                    Validators.required,
+                    Validators.minLength(5),
+                    Validators.pattern(/[0-9]/),
+                    Validators.pattern(/[a-zA-Z]/),
+            ]],
+            rePassword: ['', [
+                Validators.required,
+                this.isRePasswordCorrect(),
+            ]],
+        })
+    }
+
+    get _registerUsername() {
+        return this.registerForm.get('username')
+    }
+
+    get _registerPassword() {
+        return this.registerForm.get('password')
+    }
+
+    get _registerRePassword() {
+        return this.registerForm.get('rePassword')
+    }
+
+
+    private _createLoginForm() {
+        this.loginForm = this.fb.group({
+            username: ['', [
+                Validators.required,
+            ]],
+            password: ['', [
+                Validators.required,
+            ]],
+        })
+    }
+
+    get _loginUsername() {
+        return this.loginForm.get('username')
+    }
+
+    get _loginPassword() {
+        return this.loginForm.get('password')
+    }
+
+    isRePasswordCorrect(): ValidatorFn {
+        return (
+            control: AbstractControl
+        ): { [key: string]: boolean } | null => {
+
+            if (this.registerForm) {
+                var condition = this.registerForm.get('password').value === this.registerForm.get('rePassword').value
+            }
+            let valid =
+                !control.value || condition
+            return valid ? null : {
+                RePasswordCorrectionError: true,
+            }
+        }
+    }
+
+    getFormcontroll() {
+        console.log(this.registerForm)
+    }
 
     @Input() userAuthenticated;
     @Input() userName
     @Output() onChangedAuth = new EventEmitter<boolean>();
-    loginForm: boolean = false;
-    registerForm: boolean = false
+    activeLoginForm: boolean = false;
+    activeRegisterForm: boolean = false
     error: string = null;
 
     getLoginForm() {
-        this.loginForm = true;
-        this.registerForm = false;
+        this.activeLoginForm = true;
+        this.activeRegisterForm = false;
         this.error = null;
     }
 
     getRegisterForm() {
-        this.registerForm = true;
-        this.loginForm = false;
+        this.activeRegisterForm = true;
+        this.activeLoginForm = false;
         this.error = null;
     }
 
-
     register(form: NgForm) {
-        const usernameLength = 3;
-        if (form.value.username.length < usernameLength) {
-            this.error = `The login has to contain ${usernameLength} characters`
+        if (this.registerForm.invalid) {
+            this._registerUsername.markAsTouched()
+            this._registerPassword.markAsTouched()
+            this._registerRePassword.markAsTouched()
             return
-        }
-
-        if (form.value.password !== form.value.passwordRepeat) {
-            this.error = 'Passwords are different'
-            return
-        }
-        const passwordLength: number = 5;
-        const containDigit: boolean = true;
-        const containUpperCaseSimbol: boolean = false;
-        const containLowerCaseSimbol: boolean = true;
-        const containSpecialSimbol: boolean = false;
-
-        let regStr: string = `(?=^.{5,}$)`;
-        regStr += containDigit ? '(?=.*[0-9])' : ''
-        regStr += containUpperCaseSimbol ? '(?=.*[A-Z])' : ''
-        regStr += containLowerCaseSimbol ? '(?=.*[a-z])' : ''
-        regStr += containSpecialSimbol ? '(?=.*[^A-Za-z0-9])' : ''
-        regStr += '.*'
-        
-        let regex = new RegExp(regStr)
-        if (!regex.test(form.value.password)) {
-            let error = `The password has to contain ${passwordLength} characters`
-            error += containDigit ? ', digit' : ''
-            error += containUpperCaseSimbol ? ', upperCaseSimbol' : ''
-            error += containLowerCaseSimbol ? ', lowerCaseSimbol' : ''
-            error += containSpecialSimbol ? ', specialSimbol' : ''
-
-            this.error = error
-            return
-        }
+        }   
         
         this.logout()
         this.httpService.register(form).subscribe(response => this.onCopmplete(response), (err: HttpErrorResponse) => this.onError(err))
-        this.error = null;
     }
 
     login(form: NgForm) {
+        if (this.registerForm.invalid) {
+            this._loginUsername.markAsTouched()
+            this._loginPassword.markAsTouched()
+            return
+        }   
         this.logout()
-        this.httpService.login(form).subscribe(response => this.onCopmplete(response), err => this.onError(err))
+        this.httpService.login(form).subscribe(response => this.onCopmplete(response), errResponse => this.onError(errResponse))
     }
 
     onCopmplete(response) {
@@ -86,20 +137,21 @@ export class AppAuthorization {
         localStorage.setItem("jwt", token);
         localStorage.setItem("refreshToken", refreshToken);
         this.onChangedAuth.emit(true);
-        this.loginForm = false;
-        this.registerForm = false;
+        this.activeLoginForm = false;
+        this.activeRegisterForm = false;
         this.error = null;
     }
 
-    onError(err) {
-        this.error = err.statusText;
+    onError(errResponse) {
+        this.error = errResponse.error;
     }
 
     public logout() {
         localStorage.removeItem("jwt");
         localStorage.removeItem("refreshToken");
         this.onChangedAuth.emit(false);
-        this.loginForm = true;
+        this.activeLoginForm = true;
         this.userName = null
     }
 }
+

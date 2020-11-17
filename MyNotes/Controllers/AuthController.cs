@@ -13,6 +13,7 @@ using AuthenticationJWT.TokenServiceData;
 using MyNotes.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
+using System.Text.RegularExpressions;
 
 namespace AuthApp.Controllers
 {
@@ -29,6 +30,32 @@ namespace AuthApp.Controllers
 
         private UserContext db = new UserContext();
         readonly TokenService tokenService = new TokenService();
+
+
+        [HttpPost, Route("checkUsername")]
+        public IActionResult checkUsername([FromForm] string username)
+        {
+            StatusCode(199);
+            if (username == null)
+            {
+                return BadRequest("Invalid client request");
+            }
+
+            User user = db.Users
+                .Where(u => u.UserName == username).
+                FirstOrDefault();
+
+            if (user == null)
+                return new ObjectResult(null);
+
+            return new ObjectResult(new
+                {
+                    message = "username os busy"
+            }); 
+        }
+
+
+
 
         [HttpPost, Route("login")]
         public IActionResult Login([FromBody] User inputUser)
@@ -54,16 +81,16 @@ namespace AuthApp.Controllers
         {
             {
                 if (inputUser == null)
-                {
                     return BadRequest("Invalid client request");
-                }
+
+                Regex regex = new Regex(@"(?=.*[0-9])(?=.*[a-zA-Z]).{7,}");
+                if (!regex.IsMatch(inputUser.Password))
+                    return BadRequest("Validation Error");
 
                 User user = db.Users.FirstOrDefault(u => u.UserName == inputUser.UserName);
 
                 if (user != null)
-                {
                     return BadRequest("Username is busy");
-                }
 
                 user = new User();
                 user.UserName = inputUser.UserName;

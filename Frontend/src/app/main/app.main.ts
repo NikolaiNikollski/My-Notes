@@ -20,7 +20,7 @@ export class AppMain {
     }
 
     onChangedUserName(newUserName: string) {
-        if (newUserName === '')
+        if (newUserName === null)
             this.userAuthenticated = false
         this.userName = newUserName
     }

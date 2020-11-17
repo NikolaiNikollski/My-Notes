@@ -9,7 +9,7 @@ import { NgForm } from '@angular/forms';
 export class HttpService {
 
     urlNote: string = 'http://localhost/Api/Note';
-    urlAccount: string = 'http://localhost/Api/Auth'
+    urlAuth: string = 'http://localhost/Api/Auth'
     constructor(private http: HttpClient) { }
 
     create(note: Note): Observable<object> {
@@ -40,9 +40,15 @@ export class HttpService {
         return this.http.post(this.urlNote + '/deleteNote', formData)
     }
 
+    checkUsername(username: string): Observable<object> {
+        const formData = new FormData();
+        formData.append('username', username);
+        return this.http.post(this.urlAuth + '/checkUsername', formData)
+    }
+
     login(form: NgForm): Observable<object> {
         const credentials = JSON.stringify(form.value);
-        return this.http.post(this.urlAccount + '/login', credentials, {
+        return this.http.post(this.urlAuth + '/login', credentials, {
             headers: new HttpHeaders({
                 "Content-Type": "application/json"
             })
@@ -51,7 +57,7 @@ export class HttpService {
 
     register(form: NgForm): Observable<object>  {
         const credentials = JSON.stringify(form.value);
-        return this.http.post(this.urlAccount + '/register', credentials, {
+        return this.http.post(this.urlAuth + '/register', credentials, {
             headers: new HttpHeaders({
                 "Content-Type": "application/json"
             })
@@ -59,7 +65,7 @@ export class HttpService {
     }
 
     async refresh(credentials): Promise<HttpResponse<Object>>{
-        const response = await this.http.post(this.urlAccount + '/refresh', credentials, {
+        const response = await this.http.post(this.urlAuth + '/refresh', credentials, {
             headers: new HttpHeaders({
                 "Content-Type": "application/json"
             }),

@@ -9,30 +9,68 @@
     </div>
 </header>
 
-<form *ngIf="loginForm"  #loginForm="ngForm" (ngSubmit)="login(loginForm)">
+
+<form *ngIf="activeLoginForm" [formGroup]="loginForm" (ngSubmit)="login(loginForm)" novalidate>
     <div class="container-fluid formContainer">
         <h2 class="form-signin-heading">Login</h2> <br />
 
-        <input type="email" name="username" ngModel class="form-control" placeholder="User Name" required autofocus>  <br />
+        <div class="inputBlock">
+            <input formControlName="username" type="text" class="form-control" placeholder="Username">
+            <span *ngIf="_loginUsername.errors?.required && _loginUsername.touched" class="requiredSimbol">*</span>
+            <br />
+        </div>
 
-        <input type="password" name="password" ngModel class="form-control" placeholder="Password" required> <br />
+        <div class="inputBlock">
+            <input formControlName="password" type="password" class="form-control" placeholder="Password">
+            <span *ngIf="_loginPassword.errors?.required && _loginPassword.touched" class="requiredSimbol">*</span>
+            <br />
+        </div>
 
         <button class="btn btn-lg btn-primary formButton" type="submit">Sign in</button>
+
+        <ul *ngIf="loginForm.invalid && (_loginUsername.touched || _loginPassword.touched)" class="ValidationErrorBlock">
+            <li *ngIf="_loginUsername.errors?.required || _loginPassword.errors?.required">Fill in all required fields. <br /></li>
+        </ul>
+
         <div *ngIf="error" class="alert alert-danger">{{error}}</div>
     </div>
 </form>
 
-<form *ngIf="registerForm"  #registerForm="ngForm" (ngSubmit)="register(registerForm)">
+<form *ngIf="activeRegisterForm" [formGroup]="registerForm" (ngSubmit)="register(registerForm)"  novalidate>
     <div class="container-fluid formContainer">
         <h2 class="form-signin-heading">Register</h2> <br />
-        
-        <input type="email" name="username" ngModel class="form-control" placeholder="User Name" required autofocus> <br />
-        
-        <input type="password" name="password" ngModel class="form-control" placeholder="Password" required> <br />
-        
-        <input type="password" name="passwordRepeat" ngModel class="form-control" placeholder="Password Repeat" required> <br />
-        
+
+        <div class="inputBlock">
+            <input formControlName="username" type="text" class="form-control" placeholder="Username">
+            <span *ngIf="_registerUsername.errors?.required && _registerUsername.touched" class="requiredSimbol" >*</span>
+            <br />
+        </div>
+
+        <div class="inputBlock">
+            <input formControlName="password" type="password" class="form-control" placeholder="Password">
+            <span *ngIf="_registerPassword.errors?.required && _registerPassword.touched" class="requiredSimbol" >*</span>
+            <br />
+        </div>
+
+        <div class="inputBlock">
+            <input formControlName="rePassword" type="password" class="form-control" placeholder="Password Repeat">
+            <span *ngIf="_registerRePassword.errors?.required && _registerRePassword.touched" class="requiredSimbol" >*</span>
+            <br />
+        </div>
+
         <button class="btn btn-lg btn-primary formButton" type="submit">Register</button>
+
+        <ul *ngIf="registerForm.invalid && (_registerUsername.touched || _registerPassword.touched || _registerRePassword.touched)" class="ValidationErrorBlock">
+            <li *ngIf="_registerUsername.errors?.required || _registerPassword.errors?.required || _registerRePassword.errors?.required">Fill in all required fields. <br /></li>
+            <li *ngIf="_registerUsername.errors?.minlength">Username must contain at least {{_registerUsername.errors?.minlength.requiredLength}} simbols. <br /></li>
+            <li *ngIf="_registerPassword.errors?.minlength">Password must contain at least {{_registerPassword.errors?.minlength.requiredLength}} simbols. <br /></li>
+            <li *ngIf="_registerPassword.errors?.pattern?.requiredPattern == '/[0-9]/' ">Password must contain digit. <br /></li>
+            <li *ngIf="_registerPassword.errors?.pattern?.requiredPattern == '/[a-zA-Z]/' ">Password must contain letter.<br /></li>
+            <li *ngIf="_registerRePassword.errors?.RePasswordCorrectionError">Passwords must match.<br /> </li>
+        </ul>
+
         <div *ngIf="error" class="alert alert-danger">{{error}}</div>
     </div>
 </form>
+
+<button (click)="getFormcontroll()"> getFormcontroll</button>

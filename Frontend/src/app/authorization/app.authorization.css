@@ -1,3 +1,9 @@
+input.ng-touched.ng-invalid {
+    border: 2px solid red;
+}
+
+
+
 .nav {
     height: 50px;
     background-color: #007BFF;
@@ -41,10 +47,33 @@ form {
     border: 8px solid #007BFF;
     border-top: 0;
     color: #FFFFFF;
+    padding-bottom: 5px;
+}
+
+.inputBlock {
+    display: flex;
+    margin-bottom: 10px;
 }
 
 input {
     width: 250px;
+    margin: 0;
+}
+
+.requiredSimbol {
+    color: red;
+    font-size: 25px;
+}
+
+
+.ValidationErrorBlock {
+    color: red;
+    background-color: white;
+    border: 6px solid #007BFF;
+}
+
+ul {
+    padding-left: 30px;
 }
 
 .formButton {

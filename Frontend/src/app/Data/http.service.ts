@@ -4,13 +4,17 @@ import { map } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Configuration } from '../app.Configuration'
 
 @Injectable()
-export class HttpService {
+export class HttpService  {
 
-    urlNote: string = 'http://localhost/Api/Note';
-    urlAuth: string = 'http://localhost/Api/Auth'
     constructor(private http: HttpClient) { }
+
+    conf = new Configuration()
+
+    urlNote: string = this.conf.serverUrl + '/Api/Note'
+    urlAuth: string = this.conf.serverUrl + '/Api/Auth'
 
     create(note: Note): Observable<object> {
         const formData = new FormData();
@@ -30,7 +34,7 @@ export class HttpService {
     loadNotes(): Observable<object[]> {
       
         return this.http.get(this.urlNote + '/getAllNotes').pipe(map(data => {
-            return { ...data.value, notes: data.value.notes.map(note => new Note(note.text, note.date, note.noteId)) }              
+            return { ...(<any>data).value, notes: (<any>data).value.notes.map(note => new Note(note.text, note.date, note.noteId)) }              
         }));
     }
 

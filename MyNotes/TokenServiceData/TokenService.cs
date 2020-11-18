@@ -14,19 +14,22 @@ namespace AuthenticationJWT.TokenServiceData
 {
     public class TokenService
     {
-        static IConfigurationBuilder Builder = new ConfigurationBuilder().AddJsonFile("appsettings.json");
-        public static IConfigurationRoot conf = Builder.Build();
+        public TokenService(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        public IConfiguration Configuration { get; set; }
 
         public string GenerateAccessToken(IEnumerable<Claim> claims)
         {
-
-            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(conf["SecretKey"]));
+            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetValue<string>("SecretKey")));
             var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
             var tokeOptions = new JwtSecurityToken(
-                issuer: conf["ServerLink"],
-                audience: conf["ServerLink"],
+                issuer: Configuration.GetValue<string>("ServerUrl"),
+                audience: Configuration.GetValue<string>("ServerUrl"),
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(Convert.ToUInt16(conf["AccessTokenLifeTime"])),
+                expires: DateTime.Now.AddMinutes(Convert.ToUInt16(Configuration.GetValue<string>("AccessTokenLifeTime"))),
                 signingCredentials: signinCredentials
             );
             var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
@@ -54,7 +57,7 @@ namespace AuthenticationJWT.TokenServiceData
                 ValidateIssuer = false,
                 ValidateActor = true,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(conf["SecretKey"])),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetValue<string>("SecretKey"))),
                 ValidateLifetime = false //here we are saying that we don't care about the token's expiration date
             };
 

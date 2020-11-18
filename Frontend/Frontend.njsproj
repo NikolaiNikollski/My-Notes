@@ -50,7 +50,6 @@
     <Content Include="src\app\notelist\app.notelist.html">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="src\assets\notes.json" />
     <Content Include="src\index.html" />
     <Content Include="src\index.css">
       <SubType>Code</SubType>
@@ -65,9 +64,11 @@
     <Folder Include="src\app\main\" />
     <Folder Include="src\app\authorization\" />
     <Folder Include="src\app\notelist\" />
-    <Folder Include="src\assets\" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="src\app\app.Configuration.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="src\app\authorization\app.authorization.ts" />
     <TypeScriptCompile Include="src\app\Data\http.service.ts">
       <SubType>Code</SubType>

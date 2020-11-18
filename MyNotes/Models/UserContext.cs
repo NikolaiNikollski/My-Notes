@@ -10,11 +10,16 @@ namespace MyNotes.Models
 {
     public class UserContext: DbContext
     {
+        public UserContext(IConfiguration configuration)
+        {
+            Configuration = configuration;
+            connectionString = Configuration.GetValue<string>("ConnectionString");
+        }
+        private string connectionString;
+        private IConfiguration Configuration;
+
         public DbSet<User> Users { get; set; }
         public DbSet<Note> Notes { get; set; }
-
-        static IConfigurationBuilder Builder = new ConfigurationBuilder().AddJsonFile("appsettings.json");
-        public static string connectionString = Builder.Build()["connectionString"];
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite(connectionString);

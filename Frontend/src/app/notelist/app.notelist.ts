@@ -2,7 +2,8 @@ import { Component, Output, EventEmitter } from '@angular/core';
 import { HttpService } from '../Data/http.service'
 import { Note } from '../Data/Note';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { HttpHeaders, HttpClient,  } from '@angular/common/http';
+import { HttpHeaders, HttpClient, } from '@angular/common/http';
+
 
 @Component({
     selector: 'notelist',
@@ -120,8 +121,8 @@ export class AppNotelist {
         try {
             const response = await this.httpService.refresh(credentials)
 
-            const newToken = response.body.accessToken;
-            const newRefreshToken = response.body.refreshToken;
+            const newToken = (<any>response).body.accessToken;
+            const newRefreshToken = (<any>response).body.refreshToken;
             localStorage.setItem("jwt", newToken);
             localStorage.setItem("refreshToken", newRefreshToken);
             isRefreshSuccess = true;

@@ -28,7 +28,6 @@ namespace MyNotes
 
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddAuthentication(opt => {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -41,9 +40,9 @@ namespace MyNotes
                    ValidateAudience = true,
                    ValidateLifetime = true,
                    ValidateIssuerSigningKey = true,
-                   ValidIssuer = "https://localhost:44380",
-                   ValidAudience = "https://localhost:44380",
-                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"))
+                   ValidIssuer = Configuration.GetValue<string>("ServerUrl"),
+                   ValidAudience = Configuration.GetValue<string>("ServerUrl"),
+                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetValue<string>("SecretKey")))
                };
            });
             services.AddControllers();

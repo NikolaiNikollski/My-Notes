@@ -20,43 +20,24 @@ namespace AuthApp.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
-    {
-        //private readonly IConfiguration Configuration;
-
-        //public AuthController(IConfiguration configuration)
-        //{
-        //    Configuration = configuration;
-        //}
-
-        private UserContext db = new UserContext();
-        readonly TokenService tokenService = new TokenService();
-
-
-        [HttpPost, Route("checkUsername")]
-        public IActionResult checkUsername([FromForm] string username)
+    {        
+        public AuthController(IConfiguration configuration)
         {
-            StatusCode(199);
-            if (username == null)
-            {
-                return BadRequest("Invalid client request");
-            }
-
-            User user = db.Users
-                .Where(u => u.UserName == username).
-                FirstOrDefault();
-
-            if (user == null)
-                return new ObjectResult(null);
-
-            return new ObjectResult(new
-                {
-                    message = "username os busy"
-            }); 
+            Configuration = configuration;
+            tokenService = new TokenService(Configuration);
+            db = new UserContext(Configuration);
         }
+
+        private IConfiguration Configuration { get; set; }
+        private UserContext db; 
+        private TokenService tokenService;
 
         [HttpPost, Route("login")]
         public IActionResult Login([FromBody] User inputUser)
         {
+
+            var hz = Configuration.GetValue<string>("ServerUrl");
+
             if (inputUser == null)
             {
                 return BadRequest("Invalid client request");

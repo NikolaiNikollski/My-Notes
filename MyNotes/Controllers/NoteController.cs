@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 using MyNotes.Data.NoteModel;
 
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MyNotes.Models;
 using AuthenticationJWT.TokenServiceData;
@@ -24,8 +23,16 @@ namespace MyNotes.Data
     [ApiController]
     public class NoteController : ControllerBase
     {
-        readonly TokenService tokenService = new TokenService();
-        UserContext db = new UserContext();
+        public NoteController(IConfiguration configuration)
+        {
+            Configuration = configuration;
+            tokenService = new TokenService(Configuration);
+            db = new UserContext(Configuration);
+        }
+
+        private IConfiguration Configuration { get; set; }
+        private TokenService tokenService;
+        private UserContext db;
 
         [HttpPost, Authorize, Route("createNote")]
         public IActionResult CreateNote([FromForm] NoteDto inputNote)

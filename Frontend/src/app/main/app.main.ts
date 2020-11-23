@@ -1,16 +1,18 @@
 import { Component } from '@angular/core';
 import { Note } from '../Data/Note'
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { CookieService } from '../Data/cookie.service'
 
 @Component({
     selector: 'my-app',
     templateUrl: 'app.main.html',
-    styleUrls: ['app.main.css']
+    styleUrls: ['app.main.css'],
+    providers: [CookieService],
 
 })
 export class AppMain {
 
-    constructor(private jwtHelper: JwtHelperService,) { }
+    constructor(private jwtHelper: JwtHelperService, private cookieService: CookieService) { }
 
     userAuthenticated = this.isUserAuthenticated()
     userName: string
@@ -25,9 +27,11 @@ export class AppMain {
         this.userName = newUserName
     }
 
+
     isUserAuthenticated() {
-        const token: string = localStorage.getItem("jwt");
-        return (token && !this.jwtHelper.isTokenExpired(token));
+        const token = this.cookieService.getCookie("accessToken")
+        return (token && true);
     }
+
 }
 

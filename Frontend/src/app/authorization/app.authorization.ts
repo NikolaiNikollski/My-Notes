@@ -1,20 +1,21 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { HttpService } from '../Data/http.service'
+import { CookieService } from '../Data/cookie.service'
 import { NgForm, Validators, FormBuilder, FormGroup, ValidatorFn, AbstractControl } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
+
 
 @Component({
     selector: 'authorization',
     templateUrl: 'app.authorization.html',
     styleUrls: ['app.authorization.css'],
-    providers: [HttpService],
+    providers: [HttpService, CookieService],
 })
 export class AppAuthorization{
-
     registerForm: FormGroup;
     loginForm: FormGroup;
 
-    constructor(private fb: FormBuilder, private httpService: HttpService) {
+    constructor(private fb: FormBuilder, private httpService: HttpService, private cookieService: CookieService ) {
         this._createRegisterForm();
         this._createLoginForm();
     }
@@ -132,10 +133,6 @@ export class AppAuthorization{
     }
 
     onCopmplete(response) {
-        const token = (<any>response).value.accessToken;
-        const refreshToken = (<any>response).value.refreshToken;
-        localStorage.setItem("jwt", token);
-        localStorage.setItem("refreshToken", refreshToken);
         this.onChangedAuth.emit(true);
         this.activeLoginForm = false;
         this.activeRegisterForm = false;
@@ -146,12 +143,12 @@ export class AppAuthorization{
         this.error = errResponse.error;
     }
 
-    public logout() {
-        localStorage.removeItem("jwt");
-        localStorage.removeItem("refreshToken");
+    logout() {
+        this.cookieService.deleteCookie('accessToken')
         this.onChangedAuth.emit(false);
         this.activeLoginForm = true;
         this.userName = null
     }
+
 }
 

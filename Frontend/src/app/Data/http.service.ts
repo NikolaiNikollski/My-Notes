@@ -68,8 +68,8 @@ export class HttpService  {
         })
     }
 
-    async refresh(credentials): Promise<HttpResponse<Object>>{
-        const response = await this.http.post(this.urlAuth + '/refresh', credentials, {
+    async refresh(): Promise<HttpResponse<Object>>{
+        const response = await this.http.post(this.urlAuth + '/refresh', null, {
             headers: new HttpHeaders({
                 "Content-Type": "application/json"
             }),

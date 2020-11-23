@@ -20,7 +20,7 @@ namespace AuthApp.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
-    {        
+    {
         public AuthController(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -29,29 +29,24 @@ namespace AuthApp.Controllers
         }
 
         private IConfiguration Configuration { get; set; }
-        private UserContext db; 
+        private UserContext db;
         private TokenService tokenService;
 
         [HttpPost, Route("login")]
         public IActionResult Login([FromBody] User inputUser)
         {
-
-            var hz = Configuration.GetValue<string>("ServerUrl");
-
             if (inputUser == null)
-            {
                 return BadRequest("Invalid client request");
-            }
 
             User user = db.Users
                 .Where(u => u.UserName == inputUser.UserName && u.Password == inputUser.Password).
                 FirstOrDefault();
-            if (user != null)
-            {
-                return Ok(GetToken(user));
-            }
-            else
-                return BadRequest("Invalid username or password"); 
+
+            if (user == null)
+                return BadRequest("Invalid username or password");
+
+            GetToken(user);
+            return Ok();
         }
 
         [HttpPost, Route("register")]
@@ -76,11 +71,12 @@ namespace AuthApp.Controllers
                 var dbUser = db.Users.Add(user);
                 db.SaveChangesAsync();
 
-                return Ok(GetToken(dbUser.Entity));
+                GetToken(user);
+                return Ok();
             }
         }
 
-        private IActionResult GetToken(User user)
+        private void GetToken(User user)
         {
             List<Claim> claims = new List<Claim>
             {
@@ -93,27 +89,20 @@ namespace AuthApp.Controllers
             string newRefreshToken = tokenService.GenerateRefreshToken();
 
             user.RefreshToken = newRefreshToken;
-            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7).Ticks;
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(Convert.ToUInt32(Configuration.GetValue<string>("RefreshTokenLifeTimeDays"))).Ticks;
             db.SaveChanges();
 
-            return new ObjectResult(new
-            {
-                accessToken = newAccessToken,
-                refreshToken = newRefreshToken
-            });
+            AddTokensInCookie(Response, newAccessToken, newRefreshToken);
+
+            return;
         }
 
-        [HttpPost, Authorize]
+        [HttpPost]
         [Route("refresh")]
-        public IActionResult Refresh(TokenApiModel tokenApiModel)
+        public IActionResult Refresh() 
         {
-            if (tokenApiModel is null)
-            {
-                return BadRequest("Invalid client request");
-            }
-
-            string accessToken = tokenApiModel.AccessToken;
-            string refreshToken = tokenApiModel.RefreshToken;
+            string accessToken = Request.Cookies["accessToken"];
+            string refreshToken = Request.Cookies["refreshToken"];
 
             var principal = tokenService.GetPrincipalFromToken(accessToken);
             if (principal == null) return BadRequest("TokenError");
@@ -131,10 +120,24 @@ namespace AuthApp.Controllers
             user.RefreshToken = newRefreshToken;
             db.SaveChanges();
 
-            return new ObjectResult(new
+            AddTokensInCookie(Response, newAccessToken, newRefreshToken);
+
+            return Ok();
+        }
+
+        private void AddTokensInCookie(HttpResponse Response, string accessToken, string refreshToken)
+        {
+            Response.Cookies.Append("accessToken", accessToken, new CookieOptions
             {
-                accessToken = newAccessToken,
-                refreshToken = newRefreshToken
+                SameSite = SameSiteMode.Strict,
+                //secure = true
+            });
+
+            Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                SameSite = SameSiteMode.Strict,
+                //secure = true
             });
         }
 
@@ -150,4 +153,6 @@ namespace AuthApp.Controllers
             return NoContent();
         }
     }
-}   
+
+    
+}

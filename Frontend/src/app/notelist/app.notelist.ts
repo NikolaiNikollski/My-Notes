@@ -3,25 +3,29 @@ import { HttpService } from '../Data/http.service'
 import { Note } from '../Data/Note';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { HttpHeaders, HttpClient, } from '@angular/common/http';
+import { CookieService } from '../Data/cookie.service'
 
 
 @Component({
     selector: 'notelist',
     templateUrl: 'app.notelist.html',
     styleUrls: ['app.notelist.css'],
-    providers: [HttpService],
+    providers: [HttpService, CookieService],
 })
 
 export class AppNotelist {
 
     @Output() onChangedUserName = new EventEmitter<string>();
     notelist: Array<Note> = [];
-    constructor(private httpService: HttpService, private jwtHelper: JwtHelperService, private http: HttpClient) { }
+    constructor(private httpService: HttpService, private jwtHelper: JwtHelperService, private cookieService: CookieService) { }
 
 
     async createNote(): Promise<void> {
         let canActivatePromise = await this.canActivate()
-        if (!canActivatePromise) return
+        if (!canActivatePromise) {
+            this.onChangedUserName.emit(null)
+            return
+        }
 
         let note: Note = new Note("", this.formateDate(new Date), null)
 
@@ -37,7 +41,10 @@ export class AppNotelist {
 
     async update(note: Note): Promise<void> {
         let canActivatePromise = await this.canActivate()
-        if (!canActivatePromise) return
+        if (!canActivatePromise) {
+            this.onChangedUserName.emit(null)
+            return
+        }
 
         this.httpService.update(note).subscribe(() => { }, (err) => { this.onChangedUserName.emit(null) })
         note.Selected = false;
@@ -51,7 +58,7 @@ export class AppNotelist {
             return
         }
 
-        if (!this.canActivate()) return 
+        if (!this.canActivate()) return
         this.httpService.delete(note).subscribe(() => { }, (err) => { this.onChangedUserName.emit(null) })
         note.Selected = false;
         this.notelist.splice(index, 1)
@@ -60,7 +67,10 @@ export class AppNotelist {
 
     async selectNote(note: Note): Promise<void> {
         let canActivatePromise = await this.canActivate()
-        if (!canActivatePromise) return
+        if (!canActivatePromise) {
+            this.onChangedUserName.emit(null)
+            return
+        }
 
         note.Selected = true;
         note.TempText = note.Text
@@ -68,8 +78,11 @@ export class AppNotelist {
 
     async unselectNote(note: Note, index: number): Promise<void> {
         let canActivatePromise = await this.canActivate()
-        if (!canActivatePromise) return
- 
+        if (!canActivatePromise) {
+            this.onChangedUserName.emit(null)
+            return
+        }
+
         note.Selected = false;
         note.Text = note.TempText
         note.TempText = null;
@@ -77,16 +90,19 @@ export class AppNotelist {
 
     async loadNotes(): Promise<void> {
         let canActivatePromise = await this.canActivate()
-        if (!canActivatePromise) return
+        if (!canActivatePromise) {
+            this.onChangedUserName.emit(null)
+            return
+        }
 
         this.httpService.loadNotes().subscribe((data: any) => {
-            this.notelist = data.notes
+            this.notelist = data.notes.reverse(data.notes)
             this.onChangedUserName.emit(data.name)
         }, (err) => { this.onChangedUserName.emit(null) })
     }
 
     ngOnInit(): void {
- 
+
         this.loadNotes()
     }
 
@@ -101,36 +117,17 @@ export class AppNotelist {
     }
 
     async canActivate() {
-        const token = localStorage.getItem("jwt");
-
+        const token = this.cookieService.getCookie('accessToken')
         if (token && !this.jwtHelper.isTokenExpired(token))
             return true;
 
-        let refreshSuccessPromise = await this.tryRefreshingTokens(token)
-        if (refreshSuccessPromise)
-            return true
-
-        this.onChangedUserName.emit(null)
-        return false
+        let refreshSuccessPromise = await this.tryRefreshingTokens()
+        return refreshSuccessPromise
     }
 
-    private async tryRefreshingTokens(token: string): Promise<boolean> {
-        const refreshToken: string = localStorage.getItem("refreshToken");
-        const credentials = JSON.stringify({ accessToken: token, refreshToken: refreshToken });
-        let isRefreshSuccess: boolean;
-        try {
-            const response = await this.httpService.refresh(credentials)
-
-            const newToken = (<any>response).body.accessToken;
-            const newRefreshToken = (<any>response).body.refreshToken;
-            localStorage.setItem("jwt", newToken);
-            localStorage.setItem("refreshToken", newRefreshToken);
-            isRefreshSuccess = true;
-        }
-        catch (ex) {
-            isRefreshSuccess = false;
-        }
-        return isRefreshSuccess;
+    private async tryRefreshingTokens(): Promise<boolean> {
+        const response = await this.httpService.refresh()
+        return response.ok
     }
 
 }

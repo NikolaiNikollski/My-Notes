@@ -28,7 +28,7 @@
 
         <button class="btn btn-lg btn-primary formButton" type="submit">Sign in</button>
 
-        <ul *ngIf="loginForm.invalid && (_loginUsername.touched || _loginPassword.touched)" class="ValidationErrorBlock">
+        <ul *ngIf="_loginUsername.touched && _loginUsername.invalid || _loginPassword.touched &&  _loginPassword.invalid" class="ValidationErrorBlock">
             <li *ngIf="_loginUsername.errors?.required || _loginPassword.errors?.required">Fill in all required fields. <br /></li>
         </ul>
 
@@ -60,7 +60,12 @@
 
         <button class="btn btn-lg btn-primary formButton" type="submit">Register</button>
 
-        <ul *ngIf="registerForm.invalid && (_registerUsername.touched || _registerPassword.touched || _registerRePassword.touched)" class="ValidationErrorBlock">
+        <ul 
+            *ngIf="_registerUsername.touched && _registerUsername.invalid || 
+            _registerPassword.touched && _registerPassword.invalid || 
+            _registerRePassword.touched && _registerRePassword.invalid" 
+            class="ValidationErrorBlock"
+            >
             <li *ngIf="_registerUsername.errors?.required || _registerPassword.errors?.required || _registerRePassword.errors?.required">Fill in all required fields. <br /></li>
             <li *ngIf="_registerUsername.errors?.minlength">Username must contain at least {{_registerUsername.errors?.minlength.requiredLength}} simbols. <br /></li>
             <li *ngIf="_registerPassword.errors?.minlength">Password must contain at least {{_registerPassword.errors?.minlength.requiredLength}} simbols. <br /></li>
@@ -72,4 +77,3 @@
         <div *ngIf="error" class="alert alert-danger">{{error}}</div>
     </div>
 </form>
-

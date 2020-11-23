@@ -37,7 +37,7 @@
     </Content>
     <Content Include="src\app\authorization\app.authorization.css" />
     <Content Include="src\app\authorization\app.authorization.html" />
-    <Content Include="src\app\Data\Note.ts">
+    <Content Include="src\app\Data\note.ts">
       <SubType>Code</SubType>
     </Content>
     <Content Include="src\app\main\app.main.css">
@@ -70,6 +70,9 @@
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\app\authorization\app.authorization.ts" />
+    <TypeScriptCompile Include="src\app\Data\cookie.service.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="src\app\Data\http.service.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>

@@ -65,7 +65,7 @@ namespace MyNotes.Data
             if (userId == null) return BadRequest("TokenError");
 
             var notes = db.Notes.OrderByDescending(n => n.Date).Where(n => n.UserId == Convert.ToUInt64(userId));
-            return Ok( new ObjectResult( new { name = tokenService.GetValueFromRequestHeader(Request, "Name"), notes = notes,}));
+            return Ok( new ObjectResult( new { name = tokenService.GetValueFromRequestHeader(Request, "Name"), notes }));
         }
 
         [HttpGet("{id}"), Authorize, Route("getByIdNote")]

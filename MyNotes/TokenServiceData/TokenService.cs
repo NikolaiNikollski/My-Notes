@@ -29,7 +29,7 @@ namespace AuthenticationJWT.TokenServiceData
                 issuer: Configuration.GetValue<string>("ServerUrl"),
                 audience: Configuration.GetValue<string>("ServerUrl"),
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(Convert.ToUInt16(Configuration.GetValue<string>("AccessTokenLifeTime"))),
+                expires: DateTime.Now.AddMinutes(Convert.ToUInt16(Configuration.GetValue<string>("AccessTokenLifeTimeMinutes"))),
                 signingCredentials: signinCredentials
             );
             var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);

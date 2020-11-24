@@ -15,6 +15,18 @@
     </div>
 </div>
 
+<!--<table class="table table-bordered col-md-6 offset-md-3">
+    <tbody>
+        <tr [class.selected]="note.Selected" *ngFor="let note of notelist; index as index;">
+            <td contenteditable="true" [disabled]="!note.Selected">{{note.Text}}</td>
+            <td disabled>{{note.Date}}</td>
+            <td><button [class.selected]="note.Selected" class="btn btn-success saveButton" (click)="update(note, index)">Save</button></td>
+            <td><button [class.selected]="note.Selected" class="btn btn-success cancelButton" (click)="unselectNote(note, index)">Cancel</button></td>
+            <td><button [class.selected]="note.Selected" class="btn btn-success deleteButton" (click)="del(note, index)">Delete</button></td>
+        </tr>
+    </tbody>
+</table>-->
+
 
 
     

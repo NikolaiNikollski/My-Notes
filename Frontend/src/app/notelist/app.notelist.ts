@@ -15,6 +15,8 @@ import { CookieService } from '../Data/cookie.service'
 
 export class AppNotelist {
 
+    test = "hell"
+
     @Output() onChangedUserName = new EventEmitter<string>();
     notelist: Array<Note> = [];
     constructor(private httpService: HttpService, private jwtHelper: JwtHelperService, private cookieService: CookieService) { }
@@ -126,8 +128,13 @@ export class AppNotelist {
     }
 
     private async tryRefreshingTokens(): Promise<boolean> {
-        const response = await this.httpService.refresh()
-        return response.ok
+        try {
+            const response = await this.httpService.refresh()
+            return response.ok
+        }
+        catch {
+            return false
+        }
     }
 
 }

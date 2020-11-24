@@ -56,7 +56,7 @@ namespace AuthApp.Controllers
                 if (inputUser == null)
                     return BadRequest("Invalid client request");
 
-                Regex regex = new Regex(@"(?=.*[0-9])(?=.*[a-zA-Z]).{7,}");
+                Regex regex = new Regex(@"(?=.*[0-9])(?=.*[a-zA-Z]).{5,}");
                 if (!regex.IsMatch(inputUser.Password))
                     return BadRequest("Validation Error");
 

@@ -4,6 +4,7 @@ import { Note } from '../Data/Note';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { HttpHeaders, HttpClient, } from '@angular/common/http';
 import { CookieService } from '../Data/cookie.service'
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 
 @Component({
@@ -15,12 +16,20 @@ import { CookieService } from '../Data/cookie.service'
 
 export class AppNotelist {
 
-    test = "hell"
-
+    updateNoteForm: FormGroup;
     @Output() onChangedUserName = new EventEmitter<string>();
+    
     notelist: Array<Note> = [];
-    constructor(private httpService: HttpService, private jwtHelper: JwtHelperService, private cookieService: CookieService) { }
+    constructor(private fb: FormBuilder, private httpService: HttpService, private jwtHelper: JwtHelperService, private cookieService: CookieService) {
+        this._createUpdateNoteForm();
+    }
 
+    private _createUpdateNoteForm() {
+        this.updateNoteForm = this.fb.group({
+            text: [''],
+            id: [''],
+        })
+    }
 
     async createNote(): Promise<void> {
         let canActivatePromise = await this.canActivate()
@@ -41,7 +50,7 @@ export class AppNotelist {
         }, 100);
     }
 
-    async update(note: Note): Promise<void> {
+    async update(note: Note, index: number): Promise<void> {
         let canActivatePromise = await this.canActivate()
         if (!canActivatePromise) {
             this.onChangedUserName.emit(null)
@@ -60,7 +69,6 @@ export class AppNotelist {
             return
         }
 
-        if (!this.canActivate()) return
         this.httpService.delete(note).subscribe(() => { }, (err) => { this.onChangedUserName.emit(null) })
         note.Selected = false;
         this.notelist.splice(index, 1)
@@ -136,6 +144,7 @@ export class AppNotelist {
             return false
         }
     }
+
 
 }
 

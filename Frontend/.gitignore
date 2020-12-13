@@ -1,0 +1,15 @@
+﻿TestResult/
+
+.vs/
+
+bin/
+
+obj/
+
+Frontend/**/*.js
+Frontend/**/*.map
+Frontend/node_modules/*
+
+#Nginx/**/*Cache
+#Nginx/**/*.log
+#Nginx/**/*.pid

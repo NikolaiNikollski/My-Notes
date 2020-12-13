@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { HttpService } from '../Data/http.service'
-import { CookieService } from '../Data/cookie.service'
+import { HttpService } from '../data/http.service'
+import { CookieService } from '../data/cookie.service'
 import { NgForm, Validators, FormBuilder, FormGroup, ValidatorFn, AbstractControl } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -110,7 +110,7 @@ export class AppAuthorization{
         this.error = null;
     }
 
-    register(form: NgForm) {
+    register(data) {
         if (this.registerForm.invalid) {
             this._registerUsername.markAsTouched()
             this._registerPassword.markAsTouched()
@@ -119,17 +119,17 @@ export class AppAuthorization{
         }   
         
         this.logout()
-        this.httpService.register(form).subscribe(response => this.onCopmplete(response), (err: HttpErrorResponse) => this.onError(err))
+        this.httpService.register(data).subscribe(response => this.onCopmplete(response), (err: HttpErrorResponse) => this.onError(err))
     }
 
-    login(form: NgForm) {
+    login(data) {
         if (this.loginForm.invalid) {
             this._loginUsername.markAsTouched()
             this._loginPassword.markAsTouched()
             return
         }   
         this.logout()
-        this.httpService.login(form).subscribe(response => this.onCopmplete(response), errResponse => this.onError(errResponse))
+        this.httpService.login(data).subscribe(response => this.onCopmplete(response), errResponse => this.onError(errResponse))
     }
 
     onCopmplete(response) {

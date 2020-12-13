@@ -1,4 +1,4 @@
-import { Note } from './Note';
+import { Note } from './note';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';

@@ -9,8 +9,9 @@ obj/
 Frontend/**/*.js
 Frontend/**/*.map
 Frontend/node_modules/*
-Frontend/**/package-lock.json
 
-#Nginx/**/*Cache
-#Nginx/**/*.log
-#Nginx/**/*.pid
+Nginx/**/*Cache
+Nginx/**/*.log
+Nginx/**/*.pid
+
+**/wwwroot/

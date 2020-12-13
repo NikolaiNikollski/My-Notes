@@ -35,12 +35,15 @@ namespace AuthApp.Controllers
         [HttpPost, Route("login")]
         public IActionResult Login([FromBody] User inputUser)
         {
+
             if (inputUser == null)
                 return BadRequest("Invalid client request");
 
             User user = db.Users
                 .Where(u => u.UserName == inputUser.UserName && u.Password == inputUser.Password).
                 FirstOrDefault();
+
+
 
             if (user == null)
                 return BadRequest("Invalid username or password");
@@ -99,7 +102,7 @@ namespace AuthApp.Controllers
 
         [HttpPost]
         [Route("refresh")]
-        public IActionResult Refresh() 
+        public IActionResult Refresh()
         {
             string accessToken = Request.Cookies["accessToken"];
             string refreshToken = Request.Cookies["refreshToken"];
@@ -130,14 +133,14 @@ namespace AuthApp.Controllers
             Response.Cookies.Append("accessToken", accessToken, new CookieOptions
             {
                 SameSite = SameSiteMode.Strict,
-                //secure = true
+                //Secure = true
             });
 
             Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions
             {
                 HttpOnly = true,
                 SameSite = SameSiteMode.Strict,
-                //secure = true
+                //Secure = true
             });
         }
 
@@ -154,5 +157,5 @@ namespace AuthApp.Controllers
         }
     }
 
-    
+
 }

@@ -37,7 +37,7 @@
     </Content>
     <Content Include="src\app\authorization\app.authorization.css" />
     <Content Include="src\app\authorization\app.authorization.html" />
-    <Content Include="src\app\Data\note.ts">
+    <Content Include="src\app\data\note.ts">
       <SubType>Code</SubType>
     </Content>
     <Content Include="src\app\main\app.main.css">
@@ -50,6 +50,8 @@
     <Content Include="src\app\notelist\app.notelist.html">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="src\app\welcome\app.welcome.css" />
+    <Content Include="src\app\welcome\app.welcome.html" />
     <Content Include="src\index.html" />
     <Content Include="src\index.css">
       <SubType>Code</SubType>
@@ -60,20 +62,22 @@
   <ItemGroup>
     <Folder Include="src\" />
     <Folder Include="src\app\" />
-    <Folder Include="src\app\Data\" />
+    <Folder Include="src\app\data\" />
     <Folder Include="src\app\main\" />
     <Folder Include="src\app\authorization\" />
+    <Folder Include="src\app\welcome\" />
     <Folder Include="src\app\notelist\" />
+    <Folder Include="src\assets\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="src\app\app.Configuration.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\app\authorization\app.authorization.ts" />
-    <TypeScriptCompile Include="src\app\Data\cookie.service.ts">
+    <TypeScriptCompile Include="src\app\data\cookie.service.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="src\app\Data\http.service.ts">
+    <TypeScriptCompile Include="src\app\data\http.service.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\app\main\app.main.ts" />
@@ -81,6 +85,7 @@
     <TypeScriptCompile Include="src\app\notelist\app.notelist.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="src\app\welcome\app.welcome.ts" />
     <TypeScriptCompile Include="src\main.ts" />
     <TypeScriptCompile Include="src\polyfills.ts" />
   </ItemGroup>

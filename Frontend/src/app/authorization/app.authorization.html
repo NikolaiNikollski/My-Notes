@@ -1,79 +1,99 @@
-<header>
-    <div class="nav">
-        <div class="authPanel">
-            {{userName}}
-            <button *ngIf="!userAuthenticated" class="authPanelButton" (click)="getLoginForm()">Login</button>
-            <button *ngIf="!userAuthenticated" class="authPanelButton" (click)="getRegisterForm()">Register</button>
-            <button *ngIf="userAuthenticated" class="authPanelButton" (click)="logout()">logout</button>
+<div class="authorization">
+    <span class="appName"> Notepad</span>
+    <div class="authPanel">
+        <div *ngIf="userAuthenticated" class="userNameBlock">
+            <svg class="userNameIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 1.9C9.16 1.9 10.1 2.84 10.1 4C10.1 5.16 9.16 6.1 8 6.1C6.84 6.1 5.9 5.16 5.9 4C5.9 2.84 6.84 1.9 8 1.9ZM8 10.9C10.97 10.9 14.1 12.36 14.1 13V14.1H1.9V13C1.9 12.36 5.03 10.9 8 10.9ZM8 0C5.79 0 4 1.79 4 4C4 6.21 5.79 8 8 8C10.21 8 12 6.21 12 4C12 1.79 10.21 0 8 0ZM8 9C5.33 9 0 10.34 0 13V16H16V13C16 10.34 10.67 9 8 9Z" fill="#2F7DF6" />
+            </svg>
+            <span>{{userName}}</span>
+        </div>
+        <button *ngIf="!userAuthenticated" class="authPanelButton" (click)="getLoginForm()">Log In</button>
+        <button *ngIf="!userAuthenticated" class="authPanelButton" (click)="getRegisterForm()">Registration</button>
+        <div *ngIf="userAuthenticated" class="logautBlock">
+            <button class="authPanelButton" (click)="logout()">Logout</button>
+            <svg class="logoutIcon" width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 0H11C11.5304 0 12.0391 0.210714 12.4142 0.585786C12.7893 0.960859 13 1.46957 13 2V4H11V2H2V18H11V16H13V18C13 18.5304 12.7893 19.0391 12.4142 19.4142C12.0391 19.7893 11.5304 20 11 20H2C1.46957 20 0.960859 19.7893 0.585786 19.4142C0.210714 19.0391 0 18.5304 0 18V2C0 1.46957 0.210714 0.960859 0.585786 0.585786C0.960859 0.210714 1.46957 0 2 0Z" fill="#2F7DF6" />
+                <path d="M12.09 13.59L13.5 15L18.5 10L13.5 5L12.09 6.41L14.67 9H5V11H14.67L12.09 13.59Z" fill="#2F7DF6" />
+            </svg>
+
         </div>
     </div>
-</header>
 
+    <form [class.hiden]="!activeLoginForm" [formGroup]="loginForm" (ngSubmit)="login(loginForm)" novalidate>
+        <div class="container-fluid formContainer">
+            <h2 class="formHeader">Log In</h2> <br />
 
-<form *ngIf="activeLoginForm" [formGroup]="loginForm" (ngSubmit)="login(loginForm)" novalidate>
-    <div class="container-fluid formContainer">
-        <h2 class="form-signin-heading">Login</h2> <br />
+            <div class="inputBlock">
+                <img class="inputIcon" src="/assets/usernameIcon.svg">
+                <input formControlName="username" type="text" class="form-control" placeholder="Username">
+            </div>
 
-        <div class="inputBlock">
-            <input formControlName="username" type="text" class="form-control" placeholder="Username">
-            <span *ngIf="_loginUsername.errors?.required && _loginUsername.touched" class="requiredSimbol">*</span>
-            <br />
+            <div class="inputBlock">
+                <img class="inputIcon" src="/assets/passwordIcon.svg">
+                <input formControlName="password" type="password" class="form-control" placeholder="Password">
+            </div>
+
+            <button class="btn btn-lg btn-primary formButton" type="submit">Sign up</button>
+
+            <span class="validationErrorText" *ngIf="_loginUsername.touched && _loginUsername.invalid || _loginPassword.touched &&  _loginPassword.invalid">
+                Fill in all required fields. <br />
+            </span>
+
+            <div *ngIf="error" class="alert alert-danger">{{error}}</div>
         </div>
+    </form>
 
-        <div class="inputBlock">
-            <input formControlName="password" type="password" class="form-control" placeholder="Password">
-            <span *ngIf="_loginPassword.errors?.required && _loginPassword.touched" class="requiredSimbol">*</span>
-            <br />
+
+
+    <form [class.hiden]="!activeRegisterForm" [formGroup]="registerForm" (ngSubmit)="register(registerForm)" novalidate>
+        <div class="container-fluid formContainer">
+            <h2 class="formHeader">Registration</h2> <br />
+
+            <div class="inputBlock">
+                <img class="inputIcon" src="/assets/usernameIcon.svg">
+                <input formControlName="username" type="text" class="form-control" placeholder="Username">
+
+                <span class="validationErrorText" *ngIf="_registerUsername.touched && _registerUsername.errors?.minlength">
+                    Username must contain at least {{_registerUsername.errors?.minlength.requiredLength}} simbols. <br />
+                </span>
+            </div>
+
+            <div class="inputBlock">
+                <img class="inputIcon" src="/assets/passwordIcon.svg">
+                <input formControlName="password" type="password" class="form-control" placeholder="Password">
+
+                <span class="validationErrorText" *ngIf="_registerPassword.touched && _registerPassword.errors?.minlength">
+                    Password must contain at least {{_registerPassword.errors?.minlength.requiredLength}} simbols. <br />
+                </span>
+                <span class="validationErrorText" *ngIf="_registerPassword.touched && _registerPassword.errors?.pattern?.requiredPattern == '/[0-9]/' ">
+                    Password must contain digit. <br />
+                </span>
+                <span class="validationErrorText" *ngIf="_registerPassword.touched && _registerPassword.errors?.pattern?.requiredPattern == '/[a-zA-Z]/' ">
+                    Password must contain letter. <br />
+                </span>
+            </div>
+
+            <div class="inputBlock">
+                <img class="inputIcon" src="/assets/rePasswordIcon.svg">
+                <input formControlName="rePassword" type="password" class="form-control" placeholder="Password Repeat">
+
+                <span class="validationErrorText" *ngIf="_registerRePassword.touched && _registerRePassword.errors?.RePasswordCorrectionError">
+                    Passwords must match. <br />
+                </span>
+            </div>
+
+            <button class="btn btn-lg btn-primary formButton" type="submit">Register</button>
+
+            <span class="validationErrorText" *ngIf="_registerUsername.touched && _registerUsername.errors?.required ||
+                  _registerPassword.touched && _registerPassword.errors?.required ||
+                  _registerRePassword.touched && _registerRePassword.errors?.required">
+                Fill in all required fields. <br />
+            </span>
+
+            <div *ngIf="error" class="alert alert-danger">{{error}}</div>
         </div>
+    </form>
 
-        <button class="btn btn-lg btn-primary formButton" type="submit">Sign in</button>
+    <img *ngIf="!userAuthenticated" class="icon" src="/assets/welcome.svg" alt="app Icon">
 
-        <ul *ngIf="_loginUsername.touched && _loginUsername.invalid || _loginPassword.touched &&  _loginPassword.invalid" class="ValidationErrorBlock">
-            <li *ngIf="_loginUsername.errors?.required || _loginPassword.errors?.required">Fill in all required fields. <br /></li>
-        </ul>
-
-        <div *ngIf="error" class="alert alert-danger">{{error}}</div>
-    </div>
-</form>
-
-<form *ngIf="activeRegisterForm" [formGroup]="registerForm" (ngSubmit)="register(registerForm)"  novalidate>
-    <div class="container-fluid formContainer">
-        <h2 class="form-signin-heading">Register</h2> <br />
-
-        <div class="inputBlock">
-            <input formControlName="username" type="text" class="form-control" placeholder="Username">
-            <span *ngIf="_registerUsername.errors?.required && _registerUsername.touched" class="requiredSimbol" >*</span>
-            <br />
-        </div>
-
-        <div class="inputBlock">
-            <input formControlName="password" type="password" class="form-control" placeholder="Password">
-            <span *ngIf="_registerPassword.errors?.required && _registerPassword.touched" class="requiredSimbol" >*</span>
-            <br />
-        </div>
-
-        <div class="inputBlock">
-            <input formControlName="rePassword" type="password" class="form-control" placeholder="Password Repeat">
-            <span *ngIf="_registerRePassword.errors?.required && _registerRePassword.touched" class="requiredSimbol" >*</span>
-            <br />
-        </div>
-
-        <button class="btn btn-lg btn-primary formButton" type="submit">Register</button>
-
-        <ul 
-            *ngIf="_registerUsername.touched && _registerUsername.invalid || 
-            _registerPassword.touched && _registerPassword.invalid || 
-            _registerRePassword.touched && _registerRePassword.invalid" 
-            class="ValidationErrorBlock"
-            >
-            <li *ngIf="_registerUsername.errors?.required || _registerPassword.errors?.required || _registerRePassword.errors?.required">Fill in all required fields. <br /></li>
-            <li *ngIf="_registerUsername.errors?.minlength">Username must contain at least {{_registerUsername.errors?.minlength.requiredLength}} simbols. <br /></li>
-            <li *ngIf="_registerPassword.errors?.minlength">Password must contain at least {{_registerPassword.errors?.minlength.requiredLength}} simbols. <br /></li>
-            <li *ngIf="_registerPassword.errors?.pattern?.requiredPattern == '/[0-9]/' ">Password must contain digit. <br /></li>
-            <li *ngIf="_registerPassword.errors?.pattern?.requiredPattern == '/[a-zA-Z]/' ">Password must contain letter.<br /></li>
-            <li *ngIf="_registerRePassword.errors?.RePasswordCorrectionError">Passwords must match.<br /> </li>
-        </ul>
-
-        <div *ngIf="error" class="alert alert-danger">{{error}}</div>
-    </div>
-</form>
+</div>

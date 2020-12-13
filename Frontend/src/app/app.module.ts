@@ -6,16 +6,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppMain } from './main/app.main';
 import { AppNotelist } from './notelist/app.notelist';
 import { AppAuthorization } from './authorization/app.authorization'
-import { CookieService } from './Data/cookie.service'
-
-//function getCookie(name) {
-//    let matches = document.cookie.match(new RegExp(
-//        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-//    ));
-//    return matches ? decodeURIComponent(matches[1]) : undefined;
-//}
-
-
+import { CookieService } from './data/cookie.service'
+import { Welcome } from './welcome/app.welcome'
 
 export function tokenGetter() {
     let cookieService: CookieService = new CookieService;
@@ -41,6 +33,7 @@ export function tokenGetter() {
         AppMain,
         AppNotelist,
         AppAuthorization,
+        Welcome,
     ], 
     bootstrap: [AppMain]
 })

@@ -1,9 +1,9 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { HttpService } from '../Data/http.service'
-import { Note } from '../Data/Note';
+import { HttpService } from '../data/http.service'
+import { Note } from '../data/note';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { HttpHeaders, HttpClient, } from '@angular/common/http';
-import { CookieService } from '../Data/cookie.service'
+import { CookieService } from '../data/cookie.service'
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 
@@ -68,7 +68,6 @@ export class AppNotelist {
             this.onChangedUserName.emit(null)
             return
         }
-
         this.httpService.delete(note).subscribe(() => { }, (err) => { this.onChangedUserName.emit(null) })
         note.Selected = false;
         this.notelist.splice(index, 1)
@@ -76,6 +75,7 @@ export class AppNotelist {
 
 
     async selectNote(note: Note): Promise<void> {
+        console.log('activ');
         let canActivatePromise = await this.canActivate()
         if (!canActivatePromise) {
             this.onChangedUserName.emit(null)
@@ -84,6 +84,7 @@ export class AppNotelist {
 
         note.Selected = true;
         note.TempText = note.Text
+        console.log(this.notelist)
     }
 
     async unselectNote(note: Note, index: number): Promise<void> {
@@ -99,16 +100,18 @@ export class AppNotelist {
     }
 
     async loadNotes(): Promise<void> {
-        let canActivatePromise = await this.canActivate()
-        if (!canActivatePromise) {
-            this.onChangedUserName.emit(null)
-            return
-        }
+        //let canActivatePromise = await this.canActivate()
+        //if (!canActivatePromise) {
+        //    this.onChangedUserName.emit(null)
+        //    return
+        //}
 
-        this.httpService.loadNotes().subscribe((data: any) => {
-            this.notelist = data.notes.reverse(data.notes)
-            this.onChangedUserName.emit(data.name)
-        }, (err) => { this.onChangedUserName.emit(null) })
+        //this.httpService.loadNotes().subscribe((data: any) => {
+        //    this.notelist = data.notes.reverse(data.notes)
+        //    this.onChangedUserName.emit(data.name)
+        //}, (err) => { this.onChangedUserName.emit(null) })
+        this.notelist.push(new Note('Hello World! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', '8 december, 13:52', 1))
+        this.notelist.push(new Note('Hello World! Lorem ipsum dolor sit amet.', '11 december, 13:51', 1))
     }
 
     ngOnInit(): void {
@@ -127,6 +130,7 @@ export class AppNotelist {
     }
 
     async canActivate() {
+        return true; ////!!!
         const token = this.cookieService.getCookie('accessToken')
         if (token && !this.jwtHelper.isTokenExpired(token))
             return true;
@@ -136,6 +140,7 @@ export class AppNotelist {
     }
 
     private async tryRefreshingTokens(): Promise<boolean> {
+        return true; //!!
         try {
             const response = await this.httpService.refresh()
             return response.ok

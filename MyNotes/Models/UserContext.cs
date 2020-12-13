@@ -22,7 +22,7 @@ namespace MyNotes.Models
         public DbSet<Note> Notes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite(connectionString);
+            => options.UseSql(connectionString);
 
     }
 }

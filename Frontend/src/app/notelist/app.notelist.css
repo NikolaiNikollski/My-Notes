@@ -1,71 +1,68 @@
-
-.notelistContainer {
+div {
+    padding: 0;
 }
+
+.notelist {
+    background-color: #E5E5E5;
+    margin-top: 120px;
+    font-family: Lato;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+}
+
 
 .noteContainer {
-    background-color: #F0F0F0;
-    border: 3px solid #007BFF;
+    height: 209px;
+    background: #FFFFFF;
+    box-shadow: 0px 4px 15px rgba(9, 59, 137, 0.1);
+    border-radius: 20px;
+    margin-top: 20px;
+    padding: 24px;
 }
 
-    .noteContainer.selected {
-        border-color: darkblue;
-        background-color: #F4F7F9;
-    }
 
-
-.textBlock {
-    transition: width 3s;
-}
 
 .textBlockInherit {
-    transition: width 3s;
     border: 0;
     resize: none;
     outline: none;
-    display: inline-block;
     overflow: hidden;
+    width: 100%;
+    transition: width 3s;
     transition: height 0.7s;
-    height: 50px;
+    height: 80px;
+    background-color: #FFFFFF;
+    font-size: 14px;
+    line-height: 20px;
+    color: #424242;
 }
 
-    .textBlockInherit.selected {
+/*.textBlockInherit.selected {
         transition: height 1s;
         overflow: auto;
         height: 160px;
         width: 100%;
         background-color: #F4F7F9;
-    }
+    }*/
 
 .clickable:hover:not(.selected) {
     background-color: #F4F7F9;
     cursor: pointer;
 }
 
-.dateBlock {
-    width: 160px;
-    border: 3px solid #007BFF;
-    padding-top: 25px;
+.date {
+    width: 100%;
+    text-align: right;
+    font-size: 12px;
+    color: #2F7DF6;
+    margin-bottom: 10px;
 }
-
-    .dateBlock.selected {
-        border-color: darkblue;
-        display: none;
-    }
-
-.buttonBlock {
-    position: relative;
-    width: 100px;
-    height: 56px;
-    padding: 3px;
-}
-
 
 
 .btn {
     height: 50px;
-    width: 100px;
     font-size: 20px;
-    margin: 0 12px 5px 12px;
 }
 
     .btn:hover {
@@ -73,54 +70,101 @@
         transition: 0.3s;
     }
 
-.createButtonBlock {
+
+
+.notes {
+    font-weight: bold;
+    font-size: 26px;
+    color: #2F7DF6;
+}
+
+.tableTitle {
+    position: relative;
     display: flex;
 }
 
-.createButton {
-    margin: 15px;
-    height: 60px;
-    font-size: 20px;
-    background-color: deepskyblue;
-    min-width: 150px;
+.lineBlock {
+    display: flex;
+}
+
+.point {
+    margin-top: 17px;
+    margin-left: 25px;
 }
 
 .line {
-    height: 8px;
-    border-radius: 19px;
-    background-color: deepskyblue;
-    margin-top: 42px;
-    width: 100px;
+    top: 30px;
+    left: 0;
+    margin-top: 7px;
+    width: 80%
 }
 
-    .line.left {
-        width: 100px;
-    }
-    .line.right {
-        width: 500px;
-    }
+.createButtonBlock {
+    border-left: 25px solid #E5E5E5;
+    position: absolute;
+    right: 0px;
+}
+
+
+.createButton {
+    width: 136px;
+    height: 40px;
+    background: #2F7DF6;
+    border-radius: 20px;
+    font-size: 20px;
+    font-size: 14px;
+    color: #FFFFFF;
+    padding-left: 30px;
+    margin: 0;
+}
+
+
+.createButtonIcon {
+    position: absolute;
+    top: 8px;
+    left: 15px;
+}
+
+.buttonBlock {
+    position: relative;
+}
 
 .saveButton {
+    width: 90px;
+    height: 40px;
+    border: 0;
+    background: #2F7DF6;
+    border-radius: 20px 0 0 20px;
+    /*visibility: hidden;*/
     transition: 0,5s;
-    opacity: 0;
-    top: 0;
-    position: absolute;
+    /*opacity: 0;*/
+    font-size: 14px;
+    color: #FFFFFF;
 }
 
     .saveButton.selected {
+        visibility: initial;
         opacity: 100;
         transition: 0,5s;
         position: static;
     }
 
 .cancelButton {
+    /*visibility: hidden;*/
     transition: 1s;
-    opacity: 0;
-    position: absolute;
-    left: 3px;
+    /*opacity: 0;*/
+    width: 90px;
+    height: 40px;
+    border: 1px solid #2F7DF6;
+    border-left: 0;
+    border-radius: 0 20px 20px 0;
+    font-size: 14px;
+    color: #2F7DF6;
+    background-color: #FFFFFF;
 }
 
     .cancelButton.selected {
+        visibility: initial;
         opacity: 100;
         transform: translate(0, 56px);
         -webkit-transform: translate(0,56px);
@@ -129,11 +173,31 @@
         transition: 1s;
     }
 
-.deleteButton {
-    transition: 1s;
+.deleteButtonBlock {
+    position: absolute;
+    right: 10px;
+    bottom: 0;
 }
 
-    .deleteButton.selected {
+.deleteButton {
+    height: 40px;
+    background: #FFFFFF;
+    border: 1px solid #2F7DF6;
+    box-sizing: border-box;
+    border-radius: 20px;
+    transition: 1s;
+    font-size: 16px;
+    color: #2F7DF6;
+    padding-left: 40px;
+}
+
+.deleteButtonIcon {
+    position: absolute;
+    left: 20px;
+    top: 12px;
+}
+
+/*.deleteButton.selected {
         transform: translate(0,115px);
         -webkit-transform: translate(0,115px);
         -o-transform: translate(0,115px);
@@ -143,20 +207,24 @@
         top: 0;
         display: block;
         transition: 1s;
-    }
+    }*/
 
 
-.date {
+.iconBlock {
     position: absolute;
-    left: 3px;
-    top: 54px;
-    transition: 0.9s;
+    top: 333px;
+    left: 50%;
+    margin: 0 0 0 -160px;
+    width: 320px;
 }
 
-    .date.selected {
-        transform: translate(0, 110px);
-        -webkit-transform: translate(0, 110px);
-        -o-transform: translate(0, 110px);
-        -moz-transform: translate(0, 110px);
-        transition: 1s;
-    }
+.icon {
+    margin-left: 60px;
+    margin-bottom: 20px;
+    width: 200px;
+}
+
+.iconText {
+    font-size: 36px;
+    color: #CADEFC;
+}

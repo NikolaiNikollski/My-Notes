@@ -7,5 +7,7 @@
               *ngIf="userAuthenticated"
               (onChangedUserName)="onChangedUserName($event)">
     </notelist>
+
+    <welcome *ngIf="!userAuthenticated"> </welcome>
 </div>  
 

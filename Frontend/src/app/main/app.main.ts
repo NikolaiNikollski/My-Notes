@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { Note } from '../Data/Note'
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { CookieService } from '../Data/cookie.service'
+import { CookieService } from '../data/cookie.service'
 
 @Component({
     selector: 'my-app',
@@ -15,7 +14,7 @@ export class AppMain {
     constructor(private jwtHelper: JwtHelperService, private cookieService: CookieService) { }
 
     userAuthenticated = this.isUserAuthenticated()
-    userName: string
+    userName: string = "Nikolai Nikolsky";//!!!!
 
     onChangedAuth(increased: boolean) {
         this.userAuthenticated = increased
@@ -29,9 +28,9 @@ export class AppMain {
 
 
     isUserAuthenticated() {
-        const token = this.cookieService.getCookie("accessToken")
-        return (token && true);
+        //const token = this.cookieService.getCookie("accessToken")
+        //return (token && true);
+        return true;
     }
-
 }
 

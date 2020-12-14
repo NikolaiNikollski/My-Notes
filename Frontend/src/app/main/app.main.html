@@ -1,6 +1,7 @@
 ﻿<div>
     <authorization [userAuthenticated]="userAuthenticated"
                    (onChangedAuth)="onChangedAuth($event)"
+                   (onChangedUserName)="onChangedUserName($event)"
                    [userName] = "userName">
     </authorization>
     <notelist 

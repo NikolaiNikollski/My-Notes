@@ -16,20 +16,10 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 
 export class AppNotelist {
 
-    updateNoteForm: FormGroup;
     @Output() onChangedUserName = new EventEmitter<string>();
     
     notelist: Array<Note> = [];
-    constructor(private fb: FormBuilder, private httpService: HttpService, private jwtHelper: JwtHelperService, private cookieService: CookieService) {
-        this._createUpdateNoteForm();
-    }
-
-    private _createUpdateNoteForm() {
-        this.updateNoteForm = this.fb.group({
-            text: [''],
-            id: [''],
-        })
-    }
+    constructor(private fb: FormBuilder, private httpService: HttpService, private jwtHelper: JwtHelperService, private cookieService: CookieService) {}
 
     async createNote(): Promise<void> {
         let canActivatePromise = await this.canActivate()
@@ -71,20 +61,18 @@ export class AppNotelist {
         this.httpService.delete(note).subscribe(() => { }, (err) => { this.onChangedUserName.emit(null) })
         note.Selected = false;
         this.notelist.splice(index, 1)
+        return
     }
 
 
     async selectNote(note: Note): Promise<void> {
-        console.log('activ');
         let canActivatePromise = await this.canActivate()
         if (!canActivatePromise) {
             this.onChangedUserName.emit(null)
             return
         }
-
         note.Selected = true;
         note.TempText = note.Text
-        console.log(this.notelist)
     }
 
     async unselectNote(note: Note, index: number): Promise<void> {
@@ -100,23 +88,15 @@ export class AppNotelist {
     }
 
     async loadNotes(): Promise<void> {
-        //let canActivatePromise = await this.canActivate()
-        //if (!canActivatePromise) {
-        //    this.onChangedUserName.emit(null)
-        //    return
-        //}
-
-        //this.httpService.loadNotes().subscribe((data: any) => {
-        //    this.notelist = data.notes.reverse(data.notes)
-        //    this.onChangedUserName.emit(data.name)
-        //}, (err) => { this.onChangedUserName.emit(null) })
-        this.notelist.push(new Note('Hello World! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', '8 december, 13:52', 1))
-        this.notelist.push(new Note('Hello World! Lorem ipsum dolor sit amet.', '11 december, 13:51', 1))
-    }
-
-    ngOnInit(): void {
-
-        this.loadNotes()
+        let canActivatePromise = await this.canActivate()
+        if (!canActivatePromise) {
+            this.onChangedUserName.emit(null)
+            return
+        }
+        const response: any = await this.httpService.loadNotes();
+        this.notelist = response.notes.reverse()
+        console.log(response.name)
+        await this.onChangedUserName.emit(response.name)
     }
 
     formateDate(inDate: Date): string {
@@ -130,7 +110,6 @@ export class AppNotelist {
     }
 
     async canActivate() {
-        return true; ////!!!
         const token = this.cookieService.getCookie('accessToken')
         if (token && !this.jwtHelper.isTokenExpired(token))
             return true;
@@ -140,7 +119,6 @@ export class AppNotelist {
     }
 
     private async tryRefreshingTokens(): Promise<boolean> {
-        return true; //!!
         try {
             const response = await this.httpService.refresh()
             return response.ok
@@ -150,6 +128,9 @@ export class AppNotelist {
         }
     }
 
+    ngOnInit(): void {
+        this.loadNotes()
+    }
 
 }
 

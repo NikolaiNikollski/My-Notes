@@ -14,7 +14,7 @@ export class AppMain {
     constructor(private jwtHelper: JwtHelperService, private cookieService: CookieService) { }
 
     userAuthenticated = this.isUserAuthenticated()
-    userName: string = "Nikolai Nikolsky";//!!!!
+    userName: string;
 
     onChangedAuth(increased: boolean) {
         this.userAuthenticated = increased
@@ -28,9 +28,8 @@ export class AppMain {
 
 
     isUserAuthenticated() {
-        //const token = this.cookieService.getCookie("accessToken")
-        //return (token && true);
-        return true;
+        const token = this.cookieService.getCookie("accessToken")
+        return (token && true);
     }
 }
 

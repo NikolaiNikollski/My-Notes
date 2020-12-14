@@ -15,6 +15,8 @@ export class AppAuthorization{
     registerForm: FormGroup;
     loginForm: FormGroup;
 
+    @Output() onChangedUserName = new EventEmitter<string>();
+
     constructor(private fb: FormBuilder, private httpService: HttpService, private cookieService: CookieService ) {
         this._createRegisterForm();
         this._createLoginForm();

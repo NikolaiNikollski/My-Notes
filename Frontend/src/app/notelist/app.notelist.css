@@ -3,13 +3,14 @@ div {
 }
 
 .notelist {
+    padding: 10px;
     background-color: #E5E5E5;
     margin-top: 120px;
     font-family: Lato;
     font-style: normal;
     font-weight: bold;
     font-size: 14px;
-}
+}a
 
 
 .noteContainer {
@@ -19,6 +20,12 @@ div {
     border-radius: 20px;
     margin-top: 20px;
     padding: 24px;
+}
+
+@media screen and (max-width: 768px) {
+    .noteContainer {
+        padding: 10px;
+    }
 }
 
 
@@ -36,20 +43,21 @@ div {
     font-size: 14px;
     line-height: 20px;
     color: #424242;
+    padding: 17px;
+    border-radius: 20px;
+    margin-bottom: 10px;
 }
 
-/*.textBlockInherit.selected {
+    .textBlockInherit.selected {
+        background: #F1F7FF;
         transition: height 1s;
         overflow: auto;
-        height: 160px;
-        width: 100%;
         background-color: #F4F7F9;
-    }*/
+    }
 
-.clickable:hover:not(.selected) {
-    background-color: #F4F7F9;
-    cursor: pointer;
-}
+    .textBlockInherit:hover {
+        background: #F1F7FF;
+    }
 
 .date {
     width: 100%;
@@ -130,29 +138,25 @@ div {
 }
 
 .saveButton {
+    opacity: 0;
+    font-size: 14px;
     width: 90px;
     height: 40px;
     border: 0;
     background: #2F7DF6;
     border-radius: 20px 0 0 20px;
-    /*visibility: hidden;*/
-    transition: 0,5s;
-    /*opacity: 0;*/
-    font-size: 14px;
+    transition: 0.5s;
     color: #FFFFFF;
 }
 
     .saveButton.selected {
-        visibility: initial;
         opacity: 100;
-        transition: 0,5s;
-        position: static;
+        transition: 1s;
     }
 
 .cancelButton {
-    /*visibility: hidden;*/
     transition: 1s;
-    /*opacity: 0;*/
+    opacity: 0;
     width: 90px;
     height: 40px;
     border: 1px solid #2F7DF6;
@@ -164,12 +168,7 @@ div {
 }
 
     .cancelButton.selected {
-        visibility: initial;
         opacity: 100;
-        transform: translate(0, 56px);
-        -webkit-transform: translate(0,56px);
-        -o-transform: translate(0,56px);
-        -moz-transform: translate(0,56ppx);
         transition: 1s;
     }
 
@@ -197,19 +196,6 @@ div {
     top: 12px;
 }
 
-/*.deleteButton.selected {
-        transform: translate(0,115px);
-        -webkit-transform: translate(0,115px);
-        -o-transform: translate(0,115px);
-        -moz-transform: translate(0,115ppx);
-        transition: 1s;
-        position: absolute;
-        top: 0;
-        display: block;
-        transition: 1s;
-    }*/
-
-
 .iconBlock {
     position: absolute;
     top: 333px;
@@ -226,5 +212,5 @@ div {
 
 .iconText {
     font-size: 36px;
-    color: #CADEFC;
+    color: #2F7DF6;
 }

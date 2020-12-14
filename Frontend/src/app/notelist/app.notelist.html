@@ -9,45 +9,31 @@
         </div>
         <div class="createButtonBlock">
             <button class="btn btn-primary createButton" (click)="createNote()">New Note</button>
-            <img class="createButtonIcon" src="/assets/buttonIcon.svg">
+            <img class="createButtonIcon" (click)="createNote()" src="/assets/buttonIcon.svg">
         </div>
     </div>
 
-    <!--<table class="table table-bordered notelistContainer col-md-8 offset-md-2">
-        <tbody>
-            <tr class="noteContainer clickable" [class.selected]="note.Selected" *ngFor="let note of notelist; index as index;">
-                <td class="textBlock clickable" [class.selected]="note.Selected" (click)="selectNote(note)">
-                    <textarea class="textBlockInherit" [class.selected]="note.Selected" contenteditable="true" [(ngModel)]="note.Text" [disabled]="!note.Selected"></textarea>
-                </td>
-                <td class="buttonBlock">
-                    <button class="btn btn-success saveButton" [class.selected]="note.Selected" (click)="update(note, index)">Save <br /></button>
-                    <button class="btn btn-warning cancelButton" [class.selected]="note.Selected" (click)="unselectNote(note, index)">Cancel <br /></button>
-                    <button class="btn btn-danger deleteButton" [class.selected]="note.Selected" (click)="del(note, index)">Delete</button>
-                    <spam class="date" [class.selected]="note.Selected">{{note.Date}}</spam>
-                </td>
-            </tr>
-        </tbody>
-    </table>-->
-
-<div class="notelistContainer col-md-8 offset-md-2">
-    <!--clickable--> <div class="noteContainer" [class.selected]="note.Selected" *ngFor="let note of notelist; index as index;">
-        <div class="date" [class.selected]="note.Selected">{{note.Date}}</div>
-        <textarea class="textBlockInherit" [class.selected]="note.Selected" contenteditable="true" [(ngModel)]="note.Text" [disabled]="!note.Selected"></textarea>
-        <div class="buttonBlock">
-            <div class="saveAndCancelButtons">
-                <button class="btn btn-primary saveButton" [class.selected]="note.Selected" (click)="update(note, index)">Save <br /></button>
-                <button class="btn btn-primary cancelButton" [class.selected]="note.Selected" (click)="unselectNote(note, index)">Cancel <br /></button>
+    <div class="notelistContainer col-md-8 offset-md-2">
+        <div class="noteContainer" [class.selected]="note.Selected" *ngFor="let note of notelist; index as index;">
+            <div class="date" [class.selected]="note.Selected">{{note.Date}}</div>
+            <div (click)="selectNote(note)">
+                <textarea class="textBlockInherit clickable" [class.selected]="note.Selected" contenteditable="true" [(ngModel)]="note.Text" [disabled]="!note.Selected"></textarea>
             </div>
+            <div class="buttonBlock">
+                <div class="saveAndCancelButtons">
+                    <button class="btn btn-primary saveButton" [class.selected]="note.Selected" (click)="update(note, index)">Save <br /></button>
+                    <button class="btn btn-primary cancelButton" [class.selected]="note.Selected" (click)="unselectNote(note, index)">Cancel <br /></button>
+                </div>
 
-            <div class="deleteButtonBlock">
-                <button class="btn btn-primary deleteButton" [class.selected]="note.Selected" (click)="del(note, index)">Delete Note</button>
-                <svg class="deleteButtonIcon" width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M11 6V16H3V6H11ZM9.5 0H4.5L3.5 1H0V3H14V1H10.5L9.5 0ZM13 4H1V16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4Z" fill="#2F7DF6" />
-                </svg>
+                <div class="deleteButtonBlock">
+                    <button class="btn btn-primary deleteButton" [class.selected]="note.Selected" (click)="del(note, index)">Delete</button>
+                    <svg (click)="del(note, index)" class="deleteButtonIcon" width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M11 6V16H3V6H11ZM9.5 0H4.5L3.5 1H0V3H14V1H10.5L9.5 0ZM13 4H1V16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4Z" fill="#2F7DF6" />
+                    </svg>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
     <div *ngIf="!notelist.length" class="iconBlock">
         <img src="/assets/noRecords.svg" class="icon" alt="You have no records."> <br />

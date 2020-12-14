@@ -31,11 +31,11 @@ export class HttpService  {
         return this.http.post(this.urlNote + '/updateNote', formData)
     }
 
-    loadNotes(): Observable<object[]> {
-      
-        return this.http.get(this.urlNote + '/getAllNotes').pipe(map(data => {
-            return { ...(<any>data).value, notes: (<any>data).value.notes.map(note => new Note(note.text, note.date, note.noteId)) }              
-        }));
+    async loadNotes(): Promise<HttpResponse<Object>> {
+        const response = await this.http.get(this.urlNote + '/getAllNotes').pipe(map(data => {
+            return { ...(<any>data).value, notes: (<any>data).value.notes.map(note => new Note(note.text, note.date, note.noteId)) }
+        })).toPromise();
+        return response
     }
 
     delete(note): Observable<object> {

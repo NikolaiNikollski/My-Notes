@@ -7,7 +7,6 @@ import { AppMain } from './main/app.main';
 import { AppNotelist } from './notelist/app.notelist';
 import { AppAuthorization } from './authorization/app.authorization'
 import { CookieService } from './data/cookie.service'
-import { Welcome } from './welcome/app.welcome'
 
 export function tokenGetter() {
     let cookieService: CookieService = new CookieService;
@@ -33,7 +32,6 @@ export function tokenGetter() {
         AppMain,
         AppNotelist,
         AppAuthorization,
-        Welcome,
     ], 
     bootstrap: [AppMain]
 })

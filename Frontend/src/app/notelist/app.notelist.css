@@ -10,8 +10,7 @@ div {
     font-style: normal;
     font-weight: bold;
     font-size: 14px;
-}a
-
+}
 
 .noteContainer {
     height: 209px;
@@ -89,6 +88,7 @@ div {
 .tableTitle {
     position: relative;
     display: flex;
+    overflow: hidden;
 }
 
 .lineBlock {
@@ -104,7 +104,7 @@ div {
     top: 30px;
     left: 0;
     margin-top: 7px;
-    width: 80%
+    width: 100em;
 }
 
 .createButtonBlock {

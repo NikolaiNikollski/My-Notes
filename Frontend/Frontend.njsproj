@@ -50,7 +50,6 @@
     <Content Include="src\app\notelist\app.notelist.html">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="src\app\welcome\app.welcome.css" />
     <Content Include="src\app\welcome\app.welcome.html" />
     <Content Include="src\index.html" />
     <Content Include="src\index.css">

@@ -27,10 +27,12 @@ export class AppAuthorization{
             username: ['', [
                 Validators.required,
                 Validators.minLength(3),
+                Validators.maxLength(20),
             ]],
             password: ['', [
                     Validators.required,
                     Validators.minLength(5),
+                    Validators.maxLength(50),
                     Validators.pattern(/[0-9]/),
                     Validators.pattern(/[a-zA-Z]/),
             ]],
@@ -149,7 +151,7 @@ export class AppAuthorization{
         this.cookieService.deleteCookie('accessToken')
         this.onChangedAuth.emit(false);
         this.activeLoginForm = true;
-        this.userName = null
+        this.onChangedUserName.emit(null)
     }
 
 }

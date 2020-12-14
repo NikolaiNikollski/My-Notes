@@ -55,6 +55,9 @@
                 <span class="validationErrorText" *ngIf="_registerUsername.touched && _registerUsername.errors?.minlength">
                     Username must contain at least {{_registerUsername.errors?.minlength.requiredLength}} simbols. <br />
                 </span>
+                <span class="validationErrorText" *ngIf="_registerUsername.touched && _registerUsername.errors?.maxlength">
+                    Username cannot be longer than {{_registerUsername.errors?.maxlength.requiredLength}} simbols. <br />
+                </span>
             </div>
 
             <div class="inputBlock">
@@ -64,11 +67,14 @@
                 <span class="validationErrorText" *ngIf="_registerPassword.touched && _registerPassword.errors?.minlength">
                     Password must contain at least {{_registerPassword.errors?.minlength.requiredLength}} simbols. <br />
                 </span>
+                <span class="validationErrorText" *ngIf="_registerPassword.touched && _registerPassword.errors?.maxlength">
+                    Password cannot be longer than {{_registerPassword.errors?.maxlength.requiredLength}} simbols. <br />
+                </span>
                 <span class="validationErrorText" *ngIf="_registerPassword.touched && _registerPassword.errors?.pattern?.requiredPattern == '/[0-9]/' ">
                     Password must contain digit. <br />
                 </span>
                 <span class="validationErrorText" *ngIf="_registerPassword.touched && _registerPassword.errors?.pattern?.requiredPattern == '/[a-zA-Z]/' ">
-                    Password must contain letter. <br />
+                    Password must contain Latin letter. <br />
                 </span>
             </div>
 
@@ -89,7 +95,7 @@
                 Fill in all required fields. <br />
             </span>
 
-            <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+            <div *ngIf="error" class="validationErrorText">{{error}}</div>
         </div>
     </form>
 

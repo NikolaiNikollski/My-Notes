@@ -43,8 +43,6 @@ namespace AuthApp.Controllers
                 .Where(u => u.UserName == inputUser.UserName && u.Password == inputUser.Password).
                 FirstOrDefault();
 
-
-
             if (user == null)
                 return BadRequest("Invalid username or password");
 
@@ -56,13 +54,6 @@ namespace AuthApp.Controllers
         public IActionResult Register([FromBody] User inputUser)
         {
             {
-                if (inputUser == null)
-                    return BadRequest("Invalid client request");
-
-                Regex regex = new Regex(@"(?=.*[0-9])(?=.*[a-zA-Z]).{5,}");
-                if (!regex.IsMatch(inputUser.Password))
-                    return BadRequest("Validation Error");
-
                 User user = db.Users.FirstOrDefault(u => u.UserName == inputUser.UserName);
 
                 if (user != null)

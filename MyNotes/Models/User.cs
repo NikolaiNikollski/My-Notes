@@ -14,9 +14,21 @@ namespace MyNotes.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public ulong Id { get; set; }
+
+        [Required]
+        [MinLength(3)]
+        [StringLength(20)]
         public string UserName { get; set; }
+
+        [Required]
+        [MinLength(5)]
+        [StringLength(50)]
+        [RegularExpression(@"(?=.*[0-9])(?=.*[a-zA-Z]).{0,}")]
+
         public string Password { get; set; }
+
         public string RefreshToken { get; set; }
+
         public long RefreshTokenExpiryTime { get; set; }
 
         public List<Note> Notes { get; set; }

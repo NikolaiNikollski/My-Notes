@@ -24,7 +24,6 @@ namespace MyNotes.Models
         [MinLength(5)]
         [StringLength(50)]
         [RegularExpression(@"(?=.*[0-9])(?=.*[a-zA-Z]).{0,}")]
-
         public string Password { get; set; }
 
         public string RefreshToken { get; set; }

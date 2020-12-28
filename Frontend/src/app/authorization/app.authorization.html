@@ -1,16 +1,16 @@
 <div class="authorization">
-    <span class="appName"> Notepad</span>
+    <span class="appName">Блокнот</span>
     <div class="authPanel">
         <div *ngIf="userAuthenticated" class="userNameBlock">
             <svg class="userNameIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M8 1.9C9.16 1.9 10.1 2.84 10.1 4C10.1 5.16 9.16 6.1 8 6.1C6.84 6.1 5.9 5.16 5.9 4C5.9 2.84 6.84 1.9 8 1.9ZM8 10.9C10.97 10.9 14.1 12.36 14.1 13V14.1H1.9V13C1.9 12.36 5.03 10.9 8 10.9ZM8 0C5.79 0 4 1.79 4 4C4 6.21 5.79 8 8 8C10.21 8 12 6.21 12 4C12 1.79 10.21 0 8 0ZM8 9C5.33 9 0 10.34 0 13V16H16V13C16 10.34 10.67 9 8 9Z" fill="#2F7DF6" />
             </svg>
-            <span>{{userName}}</span>
+            {{userName}}
         </div>
-        <button *ngIf="!userAuthenticated" class="authPanelButton" (click)="getLoginForm()">Log In</button>
-        <button *ngIf="!userAuthenticated" class="authPanelButton" (click)="getRegisterForm()">Registration</button>
+        <button *ngIf="!userAuthenticated" class="authPanelButton" (click)="getLoginForm()">Вход</button>
+        <button *ngIf="!userAuthenticated" class="authPanelButton" (click)="getRegisterForm()">Регистрация</button>
         <div *ngIf="userAuthenticated" class="logautBlock">
-            <button class="authPanelButton" (click)="logout()">Logout</button>
+            <button class="authPanelButton" (click)="logout()">Выйти</button>
             <svg class="logoutIcon" width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M2 0H11C11.5304 0 12.0391 0.210714 12.4142 0.585786C12.7893 0.960859 13 1.46957 13 2V4H11V2H2V18H11V16H13V18C13 18.5304 12.7893 19.0391 12.4142 19.4142C12.0391 19.7893 11.5304 20 11 20H2C1.46957 20 0.960859 19.7893 0.585786 19.4142C0.210714 19.0391 0 18.5304 0 18V2C0 1.46957 0.210714 0.960859 0.585786 0.585786C0.960859 0.210714 1.46957 0 2 0Z" fill="#2F7DF6" />
                 <path d="M12.09 13.59L13.5 15L18.5 10L13.5 5L12.09 6.41L14.67 9H5V11H14.67L12.09 13.59Z" fill="#2F7DF6" />
@@ -20,22 +20,22 @@
 
     <form [class.hiden]="!activeLoginForm" [formGroup]="loginForm" (ngSubmit)="login(loginForm)" novalidate>
         <div class="container-fluid formContainer">
-            <h2 class="formHeader">Log In</h2> <br />
+            <h2 class="formHeader">Вход</h2> <br />
 
             <div class="inputBlock">
                 <img class="inputIcon" src="/assets/usernameIcon.svg">
-                <input formControlName="username" type="text" class="form-control" placeholder="Username">
+                <input formControlName="username" type="text" class="form-control" placeholder="Имя пользователя">
             </div>
 
             <div class="inputBlock">
                 <img class="inputIcon" src="/assets/passwordIcon.svg">
-                <input formControlName="password" type="password" class="form-control" placeholder="Password">
+                <input formControlName="password" type="password" class="form-control" placeholder="Пароль">
             </div>
 
-            <button class="btn btn-lg btn-primary formButton" type="submit">Sign up</button>
+            <button class="btn btn-lg btn-primary formButton" type="submit">Войти</button>
 
             <span class="validationErrorText" *ngIf="_loginUsername.touched && _loginUsername.invalid || _loginPassword.touched &&  _loginPassword.invalid">
-                Fill in all required fields. <br />
+                Заполните все обязательные поля. <br />
             </span>
 
             <div *ngIf="error" class="validationErrorText">{{error}}</div>
@@ -46,53 +46,53 @@
 
     <form [class.hiden]="!activeRegisterForm" [formGroup]="registerForm" (ngSubmit)="register(registerForm)" novalidate>
         <div class="container-fluid formContainer">
-            <h2 class="formHeader">Registration</h2> <br />
+            <h2 class="formHeader">Регистрация</h2> <br />
 
             <div class="inputBlock">
                 <img class="inputIcon" src="/assets/usernameIcon.svg">
-                <input formControlName="username" type="text" class="form-control" placeholder="Username">
+                <input formControlName="username" type="text" class="form-control" placeholder="Имя пользователя">
 
                 <span class="validationErrorText" *ngIf="_registerUsername.touched && _registerUsername.errors?.minlength">
-                    Username must contain at least {{_registerUsername.errors?.minlength.requiredLength}} simbols. <br />
+                    Имя пользователя должно содержать хотя бы {{_registerUsername.errors?.minlength.requiredLength}} символа. <br />
                 </span>
                 <span class="validationErrorText" *ngIf="_registerUsername.touched && _registerUsername.errors?.maxlength">
-                    Username cannot be longer than {{_registerUsername.errors?.maxlength.requiredLength}} simbols. <br />
+                    Имя пользователя не может быть длиннее {{_registerUsername.errors?.maxlength.requiredLength}} символа. <br />
                 </span>
             </div>
 
             <div class="inputBlock">
                 <img class="inputIcon" src="/assets/passwordIcon.svg">
-                <input formControlName="password" type="password" class="form-control" placeholder="Password">
+                <input formControlName="password" type="password" class="form-control" placeholder="Пароль">
 
                 <span class="validationErrorText" *ngIf="_registerPassword.touched && _registerPassword.errors?.minlength">
-                    Password must contain at least {{_registerPassword.errors?.minlength.requiredLength}} simbols. <br />
+                    Пароль должен содержать хотя бы {{_registerPassword.errors?.minlength.requiredLength}} символов. <br />
                 </span>
                 <span class="validationErrorText" *ngIf="_registerPassword.touched && _registerPassword.errors?.maxlength">
-                    Password cannot be longer than {{_registerPassword.errors?.maxlength.requiredLength}} simbols. <br />
+                    Пароль должен содержать хотя бы {{_registerPassword.errors?.maxlength.requiredLength}} символов. <br />
                 </span>
                 <span class="validationErrorText" *ngIf="_registerPassword.touched && _registerPassword.errors?.pattern?.requiredPattern == '/[0-9]/' ">
-                    Password must contain digit. <br />
+                    Пароль должен содержать цифру. <br />
                 </span>
                 <span class="validationErrorText" *ngIf="_registerPassword.touched && _registerPassword.errors?.pattern?.requiredPattern == '/[a-zA-Z]/' ">
-                    Password must contain Latin letter. <br />
+                    Пароль должен содержать латинскую букву. <br />
                 </span>
             </div>
 
             <div class="inputBlock">
                 <img class="inputIcon" src="/assets/rePasswordIcon.svg">
-                <input formControlName="rePassword" type="password" class="form-control" placeholder="Password Repeat">
+                <input formControlName="rePassword" type="password" class="form-control" placeholder="Подтверждение пароля">
 
                 <span class="validationErrorText" *ngIf="_registerRePassword.touched && _registerRePassword.errors?.RePasswordCorrectionError">
-                    Passwords must match. <br />
+                    Пароли должны совпадать. <br />
                 </span>
             </div>
 
-            <button class="btn btn-lg btn-primary formButton" type="submit">Register</button>
+            <button class="btn btn-lg btn-primary formButton" type="submit">Зарегистрироваться</button>
 
             <span class="validationErrorText" *ngIf="_registerUsername.touched && _registerUsername.errors?.required ||
                   _registerPassword.touched && _registerPassword.errors?.required ||
                   _registerRePassword.touched && _registerRePassword.errors?.required">
-                Fill in all required fields. <br />
+                Заполните все обязательные поля. <br />
             </span>
 
             <div *ngIf="error" class="validationErrorText">{{error}}</div>

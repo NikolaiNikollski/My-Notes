@@ -33,18 +33,14 @@ namespace AuthApp.Controllers
         private TokenService tokenService;
 
         [HttpPost, Route("login")]
-        public IActionResult Login([FromBody] User inputUser)
+        public IActionResult Login([FromBody] UserLogin inputUser)
         {
-
-            if (inputUser == null)
-                return BadRequest("Invalid client request");
-
             User user = db.Users
                 .Where(u => u.UserName == inputUser.UserName && u.Password == inputUser.Password).
                 FirstOrDefault();
 
             if (user == null)
-                return BadRequest("Invalid username or password");
+                return BadRequest("Неправильное имя пользователя или пароль.");
 
             GetToken(user);
             return Ok();
@@ -57,7 +53,7 @@ namespace AuthApp.Controllers
                 User user = db.Users.FirstOrDefault(u => u.UserName == inputUser.UserName);
 
                 if (user != null)
-                    return BadRequest("Username is busy");
+                    return BadRequest("Имя пользователя занято.");
 
                 user = new User();
                 user.UserName = inputUser.UserName;
